@@ -69,11 +69,18 @@ export async function sendVerificationEmail(_userId: string, email: string, toke
   };
 
   try {
-    await transporter.sendMail(mailOptions);
+    // Add timeout to prevent hanging
+    const sendPromise = transporter.sendMail(mailOptions);
+    const timeoutPromise = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error('Email send timeout')), 10000)
+    );
+    
+    await Promise.race([sendPromise, timeoutPromise]);
     console.log(`Verification email sent to ${email}`);
   } catch (error) {
     console.error('Error sending verification email:', error);
-    throw error;
+    // Don't throw - allow registration to continue even if email fails
+    console.warn('Registration completed but email sending failed. User can request resend.');
   }
 }
 
@@ -83,6 +90,7 @@ export async function sendVerificationEmail(_userId: string, email: string, toke
 export async function sendPasswordResetEmail(_userId: string, email: string, token: string): Promise<void> {
   if (!transporter) {
     console.log('Email service not configured. Reset link:', `${frontendURL}/auth/reset-password?token=${token}`);
+    console.warn('⚠️  Email not sent - configure EMAIL_USER and EMAIL_PASS environment variables');
     return;
   }
 
@@ -127,11 +135,18 @@ export async function sendPasswordResetEmail(_userId: string, email: string, tok
   };
 
   try {
-    await transporter.sendMail(mailOptions);
+    // Add timeout to prevent hanging (10 seconds max)
+    const sendPromise = transporter.sendMail(mailOptions);
+    const timeoutPromise = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error('Email send timeout')), 10000)
+    );
+    
+    await Promise.race([sendPromise, timeoutPromise]);
     console.log(`Password reset email sent to ${email}`);
   } catch (error) {
     console.error('Error sending password reset email:', error);
-    throw error;
+    // Don't throw - allow request to complete even if email fails
+    console.warn('Password reset request completed but email sending failed.');
   }
 }
 
