@@ -76,17 +76,22 @@ export const uploadBanner = multer({
  */
 export async function deleteCloudinaryImage(imageUrl: string): Promise<void> {
   try {
+    // Only delete if it's a Cloudinary URL
+    if (!imageUrl.includes('cloudinary.com')) {
+      console.log('Skipping non-Cloudinary image deletion:', imageUrl);
+      return;
+    }
+    
     // Extract public_id from Cloudinary URL
     // Example: https://res.cloudinary.com/cloud_name/image/upload/v1234567890/folder/image.jpg
-    const matches = imageUrl.match(/\/([^\/]+)\.(jpg|jpeg|png|webp|gif)$/);
-    if (matches) {
-      const publicId = imageUrl.split('/upload/')[1]?.split('.')[0];
-      if (publicId) {
-        await cloudinary.uploader.destroy(publicId);
-      }
+    const publicId = imageUrl.split('/upload/')[1]?.split('.')[0];
+    if (publicId) {
+      await cloudinary.uploader.destroy(publicId);
+      console.log('Deleted from Cloudinary:', publicId);
     }
   } catch (error) {
     console.error('Error deleting image from Cloudinary:', error);
+    // Don't throw - allow deletion to continue
   }
 }
 
