@@ -120,11 +120,17 @@ export async function getProduct(req: Request, res: Response): Promise<void> {
     const { id } = req.params;
 
     // Try to find by ID first, then by slug
-    const product = await Product.findOne({
-      $or: [{ _id: id }, { slug: id }],
-    })
-      .populate('categoryId', 'name slug')
-      .lean();
+    let product;
+    
+    // Check if id is a valid MongoDB ObjectId (24 hex characters)
+    if (id.match(/^[0-9a-fA-F]{24}$/)) {
+      product = await Product.findById(id).populate('categoryId', 'name slug').lean();
+    }
+    
+    // If not found by ID, try by slug
+    if (!product) {
+      product = await Product.findOne({ slug: id }).populate('categoryId', 'name slug').lean();
+    }
 
     if (!product) {
       throw new CustomError('Producto no encontrado', 404);
