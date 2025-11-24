@@ -91,11 +91,18 @@ export async function addToCart(req: AuthRequest, res: Response): Promise<void> 
     const { productId, variantId, quantity = 1 } = req.body;
     const userId = req.user?.userId;
     
-    // Get or create sessionId
-    let sessionId = req.cookies?.sessionId || req.headers['x-session-id'];
+    // Get or create sessionId (prefer header over cookie for cross-origin)
+    let sessionId = req.headers['x-session-id'] as string || req.cookies?.sessionId;
     if (!userId && !sessionId) {
       sessionId = `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
     }
+    
+    console.log('Session info:', { 
+      userId, 
+      sessionId, 
+      hasHeaderSession: !!req.headers['x-session-id'],
+      hasCookieSession: !!req.cookies?.sessionId 
+    });
 
     if (!productId) {
       throw new CustomError('Product ID requerido', 400);
@@ -196,15 +203,26 @@ export async function addToCart(req: AuthRequest, res: Response): Promise<void> 
     res.status(201).json({
       message: 'Producto agregado al carrito',
       cartItem,
+      sessionId: !userId ? sessionId : undefined, // Return sessionId for guest users
     });
   } catch (error: any) {
     if (error instanceof CustomError) {
       res.status(error.statusCode).json({ error: error.message });
     } else {
-      console.error('Add to cart error:', error);
-      console.error('Request body:', req.body);
-      console.error('Stack:', error.stack);
-      res.status(500).json({ error: 'Error al agregar al carrito', details: error.message });
+      console.error('❌ Add to cart error:', error);
+      console.error('📦 Request body:', req.body);
+      console.error('🔑 User:', req.user);
+      console.error('🍪 Cookies:', req.cookies);
+      console.error('📋 Headers:', req.headers);
+      console.error('📚 Stack:', error.stack);
+      console.error('💥 Error name:', error.name);
+      console.error('💬 Error message:', error.message);
+      console.error('🔍 Error code:', error.code);
+      res.status(500).json({ 
+        error: 'Error al agregar al carrito', 
+        details: error.message,
+        code: error.code 
+      });
     }
   }
 }

@@ -23,6 +23,11 @@ const optionalAuth = (req: Request, _res: Response, next: NextFunction): void =>
 
 const router = Router();
 
+// Test endpoint
+router.get('/test', (_req, res) => {
+  res.json({ message: 'Cart routes are working!', timestamp: new Date() });
+});
+
 // Cart routes with optional authentication (guest or authenticated)
 router.get('/', optionalAuth, cartController.getCart);
 router.post('/', optionalAuth, cartController.addToCart);

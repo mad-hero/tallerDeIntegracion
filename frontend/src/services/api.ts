@@ -16,13 +16,21 @@ class ApiService {
       },
     });
 
-    // Request interceptor to add auth token
+    // Request interceptor to add auth token and session ID
     this.api.interceptors.request.use(
       (config) => {
+        // Add auth token if available
         const token = localStorage.getItem('accessToken');
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;
         }
+        
+        // Add session ID for guest users (cart persistence)
+        const sessionId = localStorage.getItem('guestSessionId');
+        if (sessionId && !token) {
+          config.headers['x-session-id'] = sessionId;
+        }
+        
         return config;
       },
       (error) => Promise.reject(error)
@@ -80,6 +88,8 @@ class ApiService {
     if (response.data.accessToken) {
       localStorage.setItem('accessToken', response.data.accessToken);
       localStorage.setItem('refreshToken', response.data.refreshToken);
+      // Clear guest session on login (cart will be merged by backend)
+      localStorage.removeItem('guestSessionId');
     }
     return response.data;
   }
@@ -88,6 +98,7 @@ class ApiService {
     await this.api.post('/auth/logout');
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
+    localStorage.removeItem('guestSessionId');
   }
 
   async forgotPassword(email: string) {
@@ -151,6 +162,12 @@ class ApiService {
 
   async addToCart(productId: string, variantId?: string, quantity: number = 1) {
     const response = await this.api.post('/cart', { productId, variantId, quantity });
+    
+    // Store sessionId for guest users
+    if (response.data.sessionId && !localStorage.getItem('accessToken')) {
+      localStorage.setItem('guestSessionId', response.data.sessionId);
+    }
+    
     return response.data;
   }
 
