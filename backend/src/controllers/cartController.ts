@@ -88,6 +88,12 @@ export async function getCart(req: AuthRequest, res: Response): Promise<void> {
  */
 export async function addToCart(req: AuthRequest, res: Response): Promise<void> {
   try {
+    console.log('=== ADD TO CART REQUEST ===');
+    console.log('Body:', req.body);
+    console.log('User:', req.user);
+    console.log('Cookies:', req.cookies);
+    console.log('Headers x-session-id:', req.headers['x-session-id']);
+    
     const { productId, variantId, quantity = 1 } = req.body;
     const userId = req.user?.userId;
     
@@ -95,6 +101,7 @@ export async function addToCart(req: AuthRequest, res: Response): Promise<void> 
     let sessionId = req.headers['x-session-id'] as string || req.cookies?.sessionId;
     if (!userId && !sessionId) {
       sessionId = `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      console.log('Generated new sessionId:', sessionId);
     }
     
     console.log('Session info:', { 
