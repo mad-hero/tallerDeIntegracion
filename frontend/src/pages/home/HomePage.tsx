@@ -148,117 +148,164 @@ export function HomePage() {
       </section>
 
       {/* Categories Section */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
-          <div>
-            <h2 className="text-2xl font-bold text-neutral-900">
-              Categorías destacadas
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 animate-fade-in">
+        <div className="flex flex-col items-center justify-between gap-6 sm:flex-row mb-12">
+          <div className="text-center sm:text-left">
+            <div className="inline-block text-4xl mb-3">🎯</div>
+            <h2 className="text-4xl font-black text-gradient">
+              Categorías Destacadas
             </h2>
-            <p className="text-sm text-neutral-600">
-              Encuentra productos seleccionados para cada etapa del detailing.
+            <p className="text-lg text-neutral-600 mt-3">
+              ✨ Encuentra productos seleccionados para cada etapa del detailing
             </p>
           </div>
           <Link
             to="/productos"
-            className="text-sm font-semibold text-primary hover:text-primary-dark"
+            className="link-underline group inline-flex items-center gap-2 text-base font-bold text-gradient hover:scale-105 transition-all duration-300"
           >
-            Ver todas las categorías →
+            Ver todas las categorías
+            <span className="transition-transform group-hover:translate-x-2">→</span>
           </Link>
         </div>
 
-        <div className="mt-10 grid gap-6 md:grid-cols-3">
+        <div className="mt-10 grid gap-8 md:grid-cols-3">
           {loadingCategories ? (
-            <div className="col-span-3 py-12 text-center text-neutral-600">
-              Cargando categorías...
+            <div className="col-span-3 py-20 text-center">
+              <div className="inline-block h-16 w-16 animate-spin rounded-full border-4 border-solid border-purple-600 border-r-transparent"></div>
+              <p className="mt-6 text-lg font-semibold text-gradient">Cargando categorías...</p>
             </div>
           ) : categories.length > 0 ? (
-            categories.map((category) => (
-              <article
-                key={category._id}
-                className="group overflow-hidden rounded-3xl border border-neutral-200 bg-white shadow-sm transition-shadow hover:shadow-lg"
-              >
-                <div className="aspect-[4/3] overflow-hidden">
-                  <img
-                    src={category.image || "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80"}
-                    alt={category.name}
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    loading="lazy"
-                  />
-                </div>
-                <div className="space-y-2 p-6">
-                  <h3 className="text-lg font-semibold text-neutral-900">
-                    {category.name}
-                  </h3>
-                  <p className="text-sm text-neutral-600">
-                    {category.description || "Encuentra los mejores productos de esta categoría."}
-                  </p>
-                  <Link
-                    to={`/productos?category=${category.slug}`}
-                    className="inline-flex items-center text-sm font-semibold text-primary hover:text-primary-dark"
-                  >
-                    Ver productos
-                    <span aria-hidden className="ml-1">
-                      →
-                    </span>
-                  </Link>
-                </div>
-              </article>
-            ))
+            categories.map((category, index) => {
+              const gradients = [
+                '#667eea, #764ba2',
+                '#f093fb, #f5576c',
+                '#4facfe, #00f2fe'
+              ];
+              return (
+                <article
+                  key={category._id}
+                  className="card-premium group overflow-hidden rounded-3xl border-2 border-transparent bg-white shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(168,85,247,0.5)] transition-all duration-500 hover:-translate-y-3 animate-scale-in"
+                  style={{
+                    background: `linear-gradient(white, white) padding-box, linear-gradient(135deg, ${gradients[index]}) border-box`,
+                    animationDelay: `${index * 150}ms`
+                  }}
+                >
+                  <div className="aspect-[4/3] overflow-hidden relative">
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <img
+                      src={category.image || "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80"}
+                      alt={category.name}
+                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110 group-hover:rotate-2"
+                      loading="lazy"
+                    />
+                    <div className="absolute top-4 right-4 z-20 badge-artistic animate-float">
+                      🔥 Popular
+                    </div>
+                  </div>
+                  <div className="space-y-4 p-8">
+                    <h3 className="text-2xl font-black text-neutral-900 group-hover:text-gradient transition-all">
+                      {category.name}
+                    </h3>
+                    <p className="text-sm text-neutral-600 leading-relaxed">
+                      {category.description || "Encuentra los mejores productos de esta categoría."}
+                    </p>
+                    <Link
+                      to={`/productos?category=${category.slug}`}
+                      className="btn-premium inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-3 text-sm font-bold text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                    >
+                      Ver productos
+                      <span aria-hidden className="transition-transform group-hover:translate-x-2">
+                        →
+                      </span>
+                    </Link>
+                  </div>
+                </article>
+              );
+            })
           ) : (
-            <div className="col-span-3 py-12 text-center text-neutral-600">
-              No hay categorías disponibles aún.
+            <div className="col-span-3 rounded-3xl border-4 border-dashed border-purple-300 bg-gradient-to-br from-purple-50 to-pink-50 p-16 text-center">
+              <div className="text-6xl mb-4">📦</div>
+              <p className="text-xl font-bold text-gradient">No hay categorías disponibles aún</p>
             </div>
           )}
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="bg-white">
-        <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-          <div className="grid gap-4 sm:grid-cols-3">
-            <div className="rounded-2xl border border-primary/20 bg-white/80 p-4 text-center shadow-sm">
-              <p className="text-sm font-semibold text-neutral-700">
+      <section className="bg-gradient-to-br from-purple-50 via-white to-pink-50 py-16">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid gap-6 sm:grid-cols-3">
+            <div className="card-premium group rounded-2xl border-2 border-transparent bg-white p-8 text-center shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(168,85,247,0.5)] transition-all duration-500 hover:-translate-y-2 animate-scale-in"
+              style={{
+                background: `linear-gradient(white, white) padding-box, linear-gradient(135deg, #667eea, #764ba2) border-box`
+              }}
+            >
+              <div className="text-5xl mb-4 inline-block animate-float">📦</div>
+              <p className="text-xl font-black text-gradient mb-3">
                 Envíos a todo Chile
               </p>
-              <p className="text-xs text-neutral-500">Chilexpress, Starken, Bluexpress y más</p>
+              <p className="text-sm text-neutral-600 leading-relaxed">Chilexpress, Starken, Bluexpress y más</p>
             </div>
-            <div className="rounded-2xl border border-primary/20 bg-white/80 p-4 text-center shadow-sm">
-              <p className="text-sm font-semibold text-neutral-700">
-                Pagos seguros
+            <div className="card-premium group rounded-2xl border-2 border-transparent bg-white p-8 text-center shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(168,85,247,0.5)] transition-all duration-500 hover:-translate-y-2 animate-scale-in"
+              style={{
+                background: `linear-gradient(white, white) padding-box, linear-gradient(135deg, #f093fb, #f5576c) border-box`,
+                animationDelay: '150ms'
+              }}
+            >
+              <div className="text-5xl mb-4 inline-block animate-float" style={{animationDelay: '300ms'}}>🔒</div>
+              <p className="text-xl font-black text-gradient mb-3">
+                Pagos Seguros
               </p>
-              <p className="text-xs text-neutral-500">Webpay, Transferencia, Mercado Pago</p>
+              <p className="text-sm text-neutral-600 leading-relaxed">Webpay, Transferencia, Mercado Pago</p>
             </div>
-            <div className="rounded-2xl border border-primary/20 bg-white/80 p-4 text-center shadow-sm">
-              <p className="text-sm font-semibold text-neutral-700">
-                IVA incluido
+            <div className="card-premium group rounded-2xl border-2 border-transparent bg-white p-8 text-center shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(168,85,247,0.5)] transition-all duration-500 hover:-translate-y-2 animate-scale-in"
+              style={{
+                background: `linear-gradient(white, white) padding-box, linear-gradient(135deg, #4facfe, #00f2fe) border-box`,
+                animationDelay: '300ms'
+              }}
+            >
+              <div className="text-5xl mb-4 inline-block animate-float" style={{animationDelay: '600ms'}}>💰</div>
+              <p className="text-xl font-black text-gradient mb-3">
+                IVA Incluido
               </p>
-              <p className="text-xs text-neutral-500">Precios finales en pesos chilenos</p>
+              <p className="text-sm text-neutral-600 leading-relaxed">Precios finales en pesos chilenos</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Payment Methods Section */}
-      <section className="bg-white">
-        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold text-neutral-900">
-            Métodos de pago y seguridad
-          </h2>
-          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <section className="bg-white py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <div className="inline-block text-5xl mb-4">💳</div>
+            <h2 className="text-4xl font-black text-gradient mb-4">
+              Métodos de Pago y Seguridad
+            </h2>
+            <p className="text-lg text-neutral-600">
+              ✨ Compra con confianza usando tus medios favoritos
+            </p>
+          </div>
+          <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {[
-              { title: "Webpay Plus", description: "Aceptamos tarjetas de débito y crédito." },
-              { title: "Transferencia", description: "Pagos directos a cuenta JSP Detailing." },
-              { title: "Mercado Pago", description: "Cuotas sin interés con bancos seleccionados." },
-              { title: "SERNAC", description: "Cumplimos normativa Ley 19.496 y SERNAC." },
-            ].map((item) => (
+              { title: "Webpay Plus", description: "Aceptamos tarjetas de débito y crédito.", emoji: "💳", gradient: "#667eea, #764ba2" },
+              { title: "Transferencia", description: "Pagos directos a cuenta JSP Detailing.", emoji: "🏦", gradient: "#f093fb, #f5576c" },
+              { title: "Mercado Pago", description: "Cuotas sin interés con bancos seleccionados.", emoji: "💰", gradient: "#4facfe, #00f2fe" },
+              { title: "SERNAC", description: "Cumplimos normativa Ley 19.496 y SERNAC.", emoji: "✅", gradient: "#43e97b, #38f9d7" },
+            ].map((item, index) => (
               <div
                 key={item.title}
-                className="rounded-2xl border border-neutral-200 p-6 shadow-sm"
+                className="card-premium group rounded-3xl border-2 border-transparent bg-white p-8 shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(168,85,247,0.5)] transition-all duration-500 hover:-translate-y-3 animate-scale-in"
+                style={{
+                  background: `linear-gradient(white, white) padding-box, linear-gradient(135deg, ${item.gradient}) border-box`,
+                  animationDelay: `${index * 100}ms`
+                }}
               >
-                <h3 className="text-sm font-semibold text-neutral-900">
+                <div className="text-5xl mb-6 inline-block animate-float" style={{animationDelay: `${index * 200}ms`}}>{item.emoji}</div>
+                <h3 className="text-xl font-black text-neutral-900 group-hover:text-gradient transition-all mb-3">
                   {item.title}
                 </h3>
-                <p className="mt-2 text-sm text-neutral-600">{item.description}</p>
+                <p className="text-sm text-neutral-600 leading-relaxed">{item.description}</p>
               </div>
             ))}
           </div>
