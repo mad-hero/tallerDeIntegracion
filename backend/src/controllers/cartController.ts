@@ -348,27 +348,77 @@ export async function updateCartItem(req: AuthRequest, res: Response): Promise<v
  */
 export async function removeFromCart(req: AuthRequest, res: Response): Promise<void> {
   try {
+    console.log('=== REMOVE FROM CART REQUEST ===');
     const { id } = req.params;
     const userId = req.user?.userId;
     const sessionId = req.cookies?.sessionId || req.headers['x-session-id'];
 
-    const query: any = { _id: id };
-    if (userId) {
-      query.userId = userId;
-    } else if (sessionId) {
-      query.sessionId = sessionId;
-    } else {
-      throw new CustomError('No autorizado', 401);
+    console.log('Delete request:', { id, userId, sessionId });
+
+    // Validate MongoDB ObjectId format
+    const { Types } = require('mongoose');
+    if (!Types.ObjectId.isValid(id)) {
+      console.error('❌ Invalid cart item ID format:', id);
+      throw new CustomError('ID de item inválido', 400);
     }
 
-    const result = await CartItem.deleteOne(query);
-
-    if (result.deletedCount === 0) {
+    // First, try to find the item to see if it exists
+    const existingItem = await CartItem.findById(id);
+    console.log('Existing item found:', !!existingItem);
+    
+    if (!existingItem) {
+      console.error('❌ Cart item not found in database:', id);
       throw new CustomError('Item no encontrado en carrito', 404);
     }
 
+    console.log('Existing item details:', {
+      _id: existingItem._id,
+      userId: existingItem.userId,
+      sessionId: existingItem.sessionId,
+      productId: existingItem.productId
+    });
+
+    // Build query to ensure user/guest owns this cart item
+    const query: any = { _id: id };
+    
+    if (userId) {
+      // Logged-in user - must match userId
+      query.userId = userId;
+      console.log('Delete query (logged-in user):', query);
+    } else if (sessionId) {
+      // Guest user - must match sessionId and have null userId
+      query.sessionId = sessionId;
+      query.userId = null;
+      console.log('Delete query (guest user):', query);
+    } else {
+      console.error('❌ No userId or sessionId provided');
+      throw new CustomError('No autorizado', 401);
+    }
+
+    // Check if item matches the ownership criteria
+    const itemToDelete = await CartItem.findOne(query);
+    if (!itemToDelete) {
+      console.error('❌ Cart item exists but does not belong to this user/session');
+      console.error('Query used:', JSON.stringify(query, null, 2));
+      console.error('Item found:', JSON.stringify({
+        userId: existingItem.userId,
+        sessionId: existingItem.sessionId
+      }, null, 2));
+      throw new CustomError('Item no encontrado en tu carrito', 404);
+    }
+
+    const result = await CartItem.deleteOne(query);
+    console.log('Delete result:', { deletedCount: result.deletedCount });
+
+    if (result.deletedCount === 0) {
+      console.error('❌ Delete operation returned 0 deleted items');
+      throw new CustomError('Error al eliminar item del carrito', 404);
+    }
+
+    console.log('✅ Successfully deleted cart item');
     res.json({ message: 'Item eliminado del carrito' });
   } catch (error: any) {
+    console.error('❌ Remove from cart error:', error);
     if (error instanceof CustomError) {
       res.status(error.statusCode).json({ error: error.message });
     } else {
