@@ -40,52 +40,55 @@ export function HomePage() {
   return (
     <div className="space-y-16">
       {/* Hero Section with Banners */}
-      <section className="bg-gradient-to-br from-primary/10 via-white to-secondary/10">
+      <section className="bg-gradient-to-br from-blue-50 via-white to-purple-50 animate-gradient">
         {loadingBanners ? (
           <div className="mx-auto max-w-7xl px-4 py-24 text-center">
-            <p className="text-neutral-600">Cargando...</p>
+            <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-blue-600 border-r-transparent"></div>
+            <p className="mt-4 text-neutral-600">Cargando...</p>
           </div>
         ) : banners.length > 0 ? (
           // Mostrar primer banner activo
           <div className="mx-auto flex max-w-7xl flex-col-reverse items-center gap-12 px-4 py-16 sm:px-6 lg:flex-row lg:px-8 lg:py-24">
-            <div className="w-full space-y-6 lg:w-1/2">
-              <span className="rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
-                Detailing profesional en Chile
+            <div className="w-full space-y-6 lg:w-1/2 animate-fade-in">
+              <span className="rounded-full bg-gradient-to-r from-blue-100 to-purple-100 px-4 py-1.5 text-sm font-semibold text-blue-700 shadow-sm animate-pulse-soft">
+                ✨ Detailing profesional en Chile
               </span>
-              <h1 className="text-4xl font-bold text-neutral-900 sm:text-5xl">
+              <h1 className="text-4xl font-bold text-neutral-900 sm:text-5xl lg:text-6xl leading-tight">
                 {banners[0].title}
               </h1>
-              <p className="text-lg text-neutral-600">
+              <p className="text-lg text-neutral-600 leading-relaxed">
                 {banners[0].subtitle || "En JSP Detailing encontrarás soluciones especializadas para lavado, descontaminación y protección de tu auto."}
               </p>
               <div className="flex flex-col gap-4 sm:flex-row">
                 <Link
                   to={banners[0].ctaLink || "/productos"}
-                  className="inline-flex items-center justify-center rounded-full bg-primary px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-primary/30 transition-transform hover:-translate-y-0.5 hover:bg-primary-dark"
+                  className="btn-premium group inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-4 text-base font-semibold text-white shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 hover:scale-105"
                 >
                   {banners[0].ctaText || "Comprar ahora"}
+                  <span className="transition-transform group-hover:translate-x-1">→</span>
                 </Link>
                 <Link
                   to="/contacto"
-                  className="inline-flex items-center justify-center rounded-full border border-neutral-300 px-6 py-3 text-sm font-semibold text-neutral-700 transition-colors hover:border-primary hover:text-primary"
+                  className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-neutral-300 px-8 py-4 text-base font-semibold text-neutral-700 transition-all duration-300 hover:border-blue-500 hover:text-blue-600 hover:bg-blue-50 hover:-translate-y-1"
                 >
-                  Habla con un asesor
+                  💬 Habla con un asesor
                 </Link>
               </div>
             </div>
-            <div className="w-full lg:w-1/2">
-              <div className="relative">
+            <div className="w-full lg:w-1/2 animate-fade-in" style={{animationDelay: '200ms'}}>
+              <div className="relative group">
+                <div className="absolute -inset-2 bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl blur-2xl opacity-20 group-hover:opacity-30 transition-opacity"></div>
                 <img
                   src={banners[0].image || "https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=1000&q=80"}
                   alt={banners[0].title}
-                  className="aspect-[4/3] w-full rounded-3xl object-cover shadow-2xl lg:aspect-auto lg:h-[500px]"
-                  loading="lazy"
+                  className="relative aspect-[4/3] w-full rounded-3xl object-cover shadow-2xl lg:aspect-auto lg:h-[500px] transition-transform duration-500 group-hover:scale-[1.02]"
+                  loading="eager"
                 />
-                <div className="absolute bottom-4 left-4 rounded-2xl bg-white/90 p-3 shadow-xl sm:p-4">
-                  <p className="text-xs font-semibold uppercase text-neutral-500">
-                    Confían en nosotros
+                <div className="absolute bottom-4 left-4 rounded-2xl glass p-4 shadow-xl backdrop-blur-md animate-float">
+                  <p className="text-xs font-semibold uppercase text-neutral-600">
+                    ⭐ Confían en nosotros
                   </p>
-                  <p className="text-base font-bold text-neutral-900 sm:text-lg">
+                  <p className="text-lg font-bold text-gradient">
                     +5.000 detalladores en Chile
                   </p>
                 </div>

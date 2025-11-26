@@ -78,17 +78,17 @@ export function ProductsPage() {
 
   return (
     <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-      <header className="mb-8">
-        <h1 className="text-3xl font-bold text-neutral-900">Catálogo de Productos</h1>
-        <p className="mt-2 text-sm text-neutral-600">
+      <header className="mb-8 animate-fade-in">
+        <h1 className="text-3xl font-bold text-neutral-900 sm:text-4xl">Catálogo de Productos</h1>
+        <p className="mt-2 text-neutral-600">
           Filtra por categoría, marca, precio y disponibilidad.
         </p>
       </header>
 
       <div className="grid gap-8 lg:grid-cols-4">
         {/* Filters Sidebar */}
-        <aside className="lg:col-span-1">
-          <div className="rounded-lg border border-neutral-200 bg-white p-4">
+        <aside className="lg:col-span-1 animate-fade-in">
+          <div className="rounded-lg border border-neutral-200 bg-white p-4 shadow-md transition-shadow hover:shadow-lg">
             <h2 className="mb-4 font-semibold text-neutral-900">Filtros</h2>
             
             <div className="space-y-4">
@@ -101,7 +101,7 @@ export function ProductsPage() {
                   value={search}
                   onChange={(e) => handleFilterChange("search", e.target.value)}
                   placeholder="Buscar productos..."
-                  className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+                  className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
                 />
               </div>
 
@@ -112,7 +112,7 @@ export function ProductsPage() {
                 <select
                   value={category}
                   onChange={(e) => handleFilterChange("category", e.target.value)}
-                  className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+                  className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none cursor-pointer"
                 >
                   <option value="">Todas</option>
                   {categories.map((cat) => (
@@ -130,7 +130,7 @@ export function ProductsPage() {
                 <select
                   value={sort}
                   onChange={(e) => handleFilterChange("sort", e.target.value)}
-                  className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm"
+                  className="w-full rounded-md border border-neutral-300 px-3 py-2 text-sm transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none cursor-pointer"
                 >
                   <option value="newest">Más recientes</option>
                   <option value="price-low">Precio: menor a mayor</option>
@@ -145,31 +145,36 @@ export function ProductsPage() {
         {/* Products Grid */}
         <div className="lg:col-span-3">
           {loading ? (
-            <div className="text-center py-12">Cargando productos...</div>
+            <div className="text-center py-12">
+              <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-blue-600 border-r-transparent"></div>
+              <p className="mt-4 text-neutral-600">Cargando productos...</p>
+            </div>
           ) : products.length === 0 ? (
-            <div className="rounded-lg border border-neutral-200 bg-white p-12 text-center">
+            <div className="rounded-lg border border-neutral-200 bg-white p-12 text-center shadow-md">
               <p className="text-neutral-600">No se encontraron productos</p>
             </div>
           ) : (
             <>
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {products.map((product) => (
+                {products.map((product, index) => (
                   <div
                     key={product._id}
-                    className="group overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-sm transition-shadow hover:shadow-lg"
+                    className="group card-premium overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-md animate-fade-in"
+                    style={{ animationDelay: `${index * 100}ms` }}
                   >
                     <Link to={`/productos/${product.slug}`}>
                       {product.images && product.images.length > 0 && (
-                        <div className="aspect-square overflow-hidden">
+                        <div className="aspect-square overflow-hidden bg-gradient-to-br from-neutral-50 to-neutral-100">
                           <img
                             src={getImageUrl(product.images[0])}
                             alt={product.name}
-                            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                            className="h-full w-full object-cover transition-all duration-500 group-hover:scale-110 group-hover:rotate-1"
+                            loading="lazy"
                           />
                         </div>
                       )}
                       <div className="p-4">
-                        <h3 className="font-semibold text-neutral-900 line-clamp-2">
+                        <h3 className="font-semibold text-neutral-900 line-clamp-2 transition-colors group-hover:text-blue-600">
                           {product.name}
                         </h3>
                         {product.brand && (
@@ -179,7 +184,7 @@ export function ProductsPage() {
                           <div>
                             {product.offerPriceWithIVA ? (
                               <div>
-                                <span className="text-lg font-bold text-primary">
+                                <span className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                                   {formatCLP(product.offerPriceWithIVA)}
                                 </span>
                                 <span className="ml-2 text-sm text-neutral-500 line-through">
@@ -194,9 +199,13 @@ export function ProductsPage() {
                             <p className="text-xs text-neutral-500">IVA incluido</p>
                           </div>
                           {product.stock > 0 ? (
-                            <span className="text-xs text-green-600">En stock</span>
+                            <span className="text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded-full">
+                              En stock
+                            </span>
                           ) : (
-                            <span className="text-xs text-red-600">Sin stock</span>
+                            <span className="text-xs font-medium text-red-600 bg-red-50 px-2 py-1 rounded-full">
+                              Sin stock
+                            </span>
                           )}
                         </div>
                       </div>
@@ -205,13 +214,18 @@ export function ProductsPage() {
                       <button
                         onClick={() => handleAddToCart(product._id)}
                         disabled={addingToCart === product._id || product.stock === 0}
-                        className="w-full rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-50"
+                        className="btn-premium w-full rounded-full bg-gradient-to-r from-blue-600 to-blue-700 px-4 py-2.5 text-sm font-semibold text-white shadow-md hover:shadow-xl hover:from-blue-700 hover:to-blue-800 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:shadow-md transition-all duration-300 transform hover:-translate-y-0.5"
                       >
-                        {addingToCart === product._id
-                          ? "Agregando..."
-                          : product.stock === 0
-                          ? "Sin stock"
-                          : "Agregar al carrito"}
+                        {addingToCart === product._id ? (
+                          <span className="flex items-center justify-center gap-2">
+                            <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-r-transparent"></span>
+                            Agregando...
+                          </span>
+                        ) : product.stock === 0 ? (
+                          "Sin stock"
+                        ) : (
+                          "Agregar al carrito"
+                        )}
                       </button>
                     </div>
                   </div>
