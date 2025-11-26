@@ -16,9 +16,11 @@ export function Footer() {
       <div className="relative mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-4 lg:px-8">
         <div className="animate-fade-in">
           <div className="mb-6 flex items-center gap-3">
-            <span className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-600 via-pink-600 to-red-600 text-xl font-black text-white shadow-xl transition-transform duration-500 hover:scale-125 hover:rotate-12">
-              JSP
-            </span>
+            <img 
+              src="/jsp.jpg" 
+              alt="JSP Detailing" 
+              className="h-16 w-auto object-contain transition-transform duration-500 hover:scale-110 hover:rotate-3 drop-shadow-2xl"
+            />
             <div className="flex flex-col leading-none">
               <span className="text-base font-black text-gradient">
                 JSP Detailing

@@ -31,9 +31,11 @@ export function Header() {
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-3 animate-fade-in">
           <Link to="/" className="flex items-center gap-3 group">
-            <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-600 via-pink-600 to-red-600 text-xl font-black text-white shadow-xl group-hover:shadow-2xl transition-all duration-500 group-hover:scale-125 group-hover:rotate-12 border-2 border-white/30">
-              JSP
-            </span>
+            <img 
+              src="/jsp.jpg" 
+              alt="JSP Detailing" 
+              className="h-14 w-auto object-contain transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 drop-shadow-2xl"
+            />
             <div className="flex flex-col leading-none">
               <span className="text-base font-black text-gradient transition-all">
                 JSP Detailing
