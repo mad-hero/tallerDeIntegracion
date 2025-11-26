@@ -23,19 +23,23 @@ export function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 border-b border-neutral-200 glass shadow-sm transition-all duration-300">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-50 glass shadow-lg transition-all duration-300 border-b-4 border-transparent" style={{
+      background: 'linear-gradient(white, white) padding-box, linear-gradient(90deg, #667eea, #764ba2, #f093fb, #667eea) border-box',
+      backgroundSize: '300% 100%',
+      animation: 'gradientShift 6s ease infinite'
+    }}>
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-3 animate-fade-in">
-          <Link to="/" className="flex items-center gap-2 group">
-            <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-purple-600 text-lg font-bold text-white shadow-md group-hover:shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
+          <Link to="/" className="flex items-center gap-3 group">
+            <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-600 via-pink-600 to-red-600 text-xl font-black text-white shadow-xl group-hover:shadow-2xl transition-all duration-500 group-hover:scale-125 group-hover:rotate-12 border-2 border-white/30">
               JSP
             </span>
             <div className="flex flex-col leading-none">
-              <span className="text-sm font-semibold text-neutral-900 group-hover:text-blue-600 transition-colors">
+              <span className="text-base font-black text-gradient transition-all">
                 JSP Detailing
               </span>
-              <span className="text-xs text-neutral-500">
-                Cuidado automotriz profesional
+              <span className="text-xs font-semibold text-purple-600 uppercase tracking-wider">
+                Premium Auto Care
               </span>
             </div>
           </Link>
@@ -93,9 +97,13 @@ export function Header() {
               </Link>
               <Link
                 to="/registro"
-                className="btn-premium rounded-full bg-gradient-to-r from-blue-600 to-blue-700 px-4 py-2 text-sm font-semibold text-white shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5"
+                className="btn-premium rounded-2xl bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 px-5 py-2.5 text-sm font-bold text-white shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-1 hover:scale-105 border border-white/20"
+                style={{
+                  backgroundSize: '200% 100%',
+                  animation: 'gradientShift 3s ease infinite'
+                }}
               >
-                Crear cuenta
+                ✨ Crear cuenta
               </Link>
             </>
           )}

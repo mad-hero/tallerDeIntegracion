@@ -78,10 +78,10 @@ export function ProductsPage() {
 
   return (
     <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-      <header className="mb-8 animate-fade-in">
-        <h1 className="text-3xl font-bold text-neutral-900 sm:text-4xl">Catálogo de Productos</h1>
-        <p className="mt-2 text-neutral-600">
-          Filtra por categoría, marca, precio y disponibilidad.
+      <header className="mb-12 animate-fade-in text-center">
+        <h1 className="heading-artistic mb-6">Catálogo de Productos</h1>
+        <p className="mt-4 text-lg text-neutral-600 max-w-2xl mx-auto">
+          ✨ Descubre nuestra selección exclusiva de productos premium
         </p>
       </header>
 
@@ -159,72 +159,83 @@ export function ProductsPage() {
                 {products.map((product, index) => (
                   <div
                     key={product._id}
-                    className="group card-premium overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-md animate-fade-in"
-                    style={{ animationDelay: `${index * 100}ms` }}
+                    className="group card-premium overflow-hidden rounded-3xl border-2 border-transparent bg-white shadow-xl animate-fade-in"
+                    style={{ 
+                      animationDelay: `${index * 100}ms`,
+                      background: `linear-gradient(white, white) padding-box, linear-gradient(135deg, ${index % 3 === 0 ? '#667eea, #764ba2' : index % 3 === 1 ? '#f093fb, #f5576c' : '#4facfe, #00f2fe'}) border-box`
+                    }}
                   >
-                    <Link to={`/productos/${product.slug}`}>
+                    <Link to={`/productos/${product.slug}`} className="block relative">
                       {product.images && product.images.length > 0 && (
-                        <div className="aspect-square overflow-hidden bg-gradient-to-br from-neutral-50 to-neutral-100">
+                        <div className="aspect-square overflow-hidden bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 relative">
+                          <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 pointer-events-none"></div>
                           <img
                             src={getImageUrl(product.images[0])}
                             alt={product.name}
-                            className="h-full w-full object-cover transition-all duration-500 group-hover:scale-110 group-hover:rotate-1"
+                            className="h-full w-full object-cover transition-all duration-700 group-hover:scale-125 group-hover:rotate-3"
                             loading="lazy"
                           />
                         </div>
                       )}
-                      <div className="p-4">
-                        <h3 className="font-semibold text-neutral-900 line-clamp-2 transition-colors group-hover:text-blue-600">
+                      <div className="p-6">
+                        <h3 className="font-bold text-lg text-neutral-900 line-clamp-2 transition-all duration-300 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-blue-600 group-hover:via-purple-600 group-hover:to-pink-600 group-hover:bg-clip-text">
                           {product.name}
                         </h3>
                         {product.brand && (
-                          <p className="mt-1 text-sm text-neutral-500">{product.brand}</p>
+                          <p className="mt-2 text-sm font-semibold text-purple-600 uppercase tracking-wide">{product.brand}</p>
                         )}
-                        <div className="mt-3 flex items-center justify-between">
+                        <div className="mt-4 flex items-end justify-between">
                           <div>
                             {product.offerPriceWithIVA ? (
                               <div>
-                                <span className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                                <div className="price-artistic">
                                   {formatCLP(product.offerPriceWithIVA)}
-                                </span>
-                                <span className="ml-2 text-sm text-neutral-500 line-through">
+                                </div>
+                                <span className="ml-2 text-sm text-neutral-400 line-through">
                                   {formatCLP(product.priceWithIVA)}
                                 </span>
                               </div>
                             ) : (
-                              <span className="text-lg font-bold text-neutral-900">
+                              <div className="price-artistic">
                                 {formatCLP(product.priceWithIVA)}
-                              </span>
+                              </div>
                             )}
-                            <p className="text-xs text-neutral-500">IVA incluido</p>
+                            <p className="text-xs font-medium text-neutral-500 mt-1">IVA incluido</p>
                           </div>
                           {product.stock > 0 ? (
-                            <span className="text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded-full">
-                              En stock
+                            <span className="badge-artistic text-xs px-3 py-1.5 bg-gradient-to-r from-green-500 to-emerald-500">
+                              ✓ Disponible
                             </span>
                           ) : (
-                            <span className="text-xs font-medium text-red-600 bg-red-50 px-2 py-1 rounded-full">
-                              Sin stock
+                            <span className="text-xs font-bold text-red-500 bg-red-100 px-3 py-1.5 rounded-full border-2 border-red-300">
+                              Agotado
                             </span>
                           )}
                         </div>
                       </div>
                     </Link>
-                    <div className="px-4 pb-4">
+                    <div className="px-6 pb-6">
                       <button
                         onClick={() => handleAddToCart(product._id)}
                         disabled={addingToCart === product._id || product.stock === 0}
-                        className="btn-premium w-full rounded-full bg-gradient-to-r from-blue-600 to-blue-700 px-4 py-2.5 text-sm font-semibold text-white shadow-md hover:shadow-xl hover:from-blue-700 hover:to-blue-800 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:shadow-md transition-all duration-300 transform hover:-translate-y-0.5"
+                        className="btn-premium w-full rounded-2xl bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 px-6 py-4 text-base font-bold text-white shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(168,85,247,0.6)] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:shadow-md transition-all duration-500 transform hover:-translate-y-2 hover:scale-105 border-2 border-white/20"
+                        style={{
+                          backgroundSize: '200% 100%',
+                          animation: addingToCart === product._id ? 'none' : 'gradientShift 3s ease infinite'
+                        }}
                       >
                         {addingToCart === product._id ? (
                           <span className="flex items-center justify-center gap-2">
-                            <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-r-transparent"></span>
+                            <span className="inline-block h-5 w-5 animate-spin rounded-full border-3 border-white border-r-transparent"></span>
                             Agregando...
                           </span>
                         ) : product.stock === 0 ? (
-                          "Sin stock"
+                          "❌ Sin stock"
                         ) : (
-                          "Agregar al carrito"
+                          <span className="flex items-center justify-center gap-2">
+                            <span>🛒</span>
+                            Agregar al carrito
+                          </span>
                         )}
                       </button>
                     </div>

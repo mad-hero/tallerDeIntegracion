@@ -50,10 +50,10 @@ export function HomePage() {
           // Mostrar primer banner activo
           <div className="mx-auto flex max-w-7xl flex-col-reverse items-center gap-12 px-4 py-16 sm:px-6 lg:flex-row lg:px-8 lg:py-24">
             <div className="w-full space-y-6 lg:w-1/2 animate-fade-in">
-              <span className="rounded-full bg-gradient-to-r from-blue-100 to-purple-100 px-4 py-1.5 text-sm font-semibold text-blue-700 shadow-sm animate-pulse-soft">
-                ✨ Detailing profesional en Chile
+              <span className="badge-artistic inline-block">
+                ✨ Detailing Profesional en Chile
               </span>
-              <h1 className="text-4xl font-bold text-neutral-900 sm:text-5xl lg:text-6xl leading-tight">
+              <h1 className="heading-artistic">
                 {banners[0].title}
               </h1>
               <p className="text-lg text-neutral-600 leading-relaxed">
