@@ -28,9 +28,11 @@ export function AdminDashboardPage() {
 
   if (!isAdmin) {
     return (
-      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="rounded-lg bg-red-50 p-4 text-red-800">
-          No tienes permisos para acceder a esta sección.
+      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8 animate-fade-in">
+        <div className="rounded-3xl border-4 border-dashed border-red-300 bg-gradient-to-br from-red-50 via-white to-pink-50 p-16 text-center shadow-xl">
+          <div className="text-6xl mb-6">🚫</div>
+          <p className="text-xl font-bold text-gradient mb-4">Acceso Denegado</p>
+          <p className="text-red-700">No tienes permisos para acceder a esta sección.</p>
         </div>
       </div>
     );
@@ -39,132 +41,186 @@ export function AdminDashboardPage() {
   if (loading) {
     return (
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="text-center">Cargando...</div>
+        <div className="text-center py-20">
+          <div className="inline-block h-16 w-16 animate-spin rounded-full border-4 border-solid border-purple-600 border-r-transparent"></div>
+          <p className="mt-6 text-lg font-semibold text-gradient">Cargando panel...</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-      <header className="mb-8">
-        <h1 className="text-3xl font-bold text-neutral-900">Panel Administrador</h1>
-        <p className="mt-2 text-sm text-neutral-600">
-          Administra productos, categorías, banners y monitorea el estado de los pedidos.
+    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 animate-fade-in">
+      <header className="mb-12 text-center">
+        <div className="inline-block text-6xl mb-4 animate-float">👨‍💼</div>
+        <h1 className="heading-artistic mb-4">Panel Administrador</h1>
+        <p className="mt-4 text-lg text-neutral-700">
+          ⚡ Administra productos, categorías, banners y monitorea pedidos
         </p>
       </header>
 
       {/* Stats Grid */}
-      <div className="mb-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="rounded-lg border border-neutral-200 bg-white p-6 shadow-sm">
+      <div className="mb-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="card-premium rounded-2xl border-2 border-transparent bg-white p-6 shadow-xl animate-scale-in"
+          style={{
+            background: `linear-gradient(white, white) padding-box, linear-gradient(135deg, #4facfe, #00f2fe) border-box`
+          }}
+        >
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-neutral-600">Total Productos</p>
-              <p className="mt-2 text-3xl font-bold text-neutral-900">{stats?.totalProducts || 0}</p>
+              <p className="text-sm font-bold text-purple-600 uppercase tracking-wide">Total Productos</p>
+              <p className="mt-3 text-4xl font-black text-gradient">{stats?.totalProducts || 0}</p>
             </div>
-            <div className="rounded-full bg-blue-100 p-3">
-              <svg className="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 p-4 shadow-lg">
+              <svg className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
               </svg>
             </div>
           </div>
         </div>
 
-        <div className="rounded-lg border border-neutral-200 bg-white p-6 shadow-sm">
+        <div className="card-premium rounded-2xl border-2 border-transparent bg-white p-6 shadow-xl animate-scale-in"
+          style={{
+            background: `linear-gradient(white, white) padding-box, linear-gradient(135deg, #fa709a, #fee140) border-box`,
+            animationDelay: '100ms'
+          }}
+        >
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-neutral-600">Stock Bajo</p>
-              <p className="mt-2 text-3xl font-bold text-red-600">{stats?.lowStockProducts || 0}</p>
+              <p className="text-sm font-bold text-purple-600 uppercase tracking-wide">Stock Bajo</p>
+              <p className="mt-3 text-4xl font-black bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">{stats?.lowStockProducts || 0}</p>
             </div>
-            <div className="rounded-full bg-red-100 p-3">
-              <svg className="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="rounded-2xl bg-gradient-to-br from-red-500 to-orange-500 p-4 shadow-lg animate-pulse-soft">
+              <svg className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
               </svg>
             </div>
           </div>
         </div>
 
-        <div className="rounded-lg border border-neutral-200 bg-white p-6 shadow-sm">
+        <div className="card-premium rounded-2xl border-2 border-transparent bg-white p-6 shadow-xl animate-scale-in"
+          style={{
+            background: `linear-gradient(white, white) padding-box, linear-gradient(135deg, #43e97b, #38f9d7) border-box`,
+            animationDelay: '200ms'
+          }}
+        >
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-neutral-600">Pedidos Hoy</p>
-              <p className="mt-2 text-3xl font-bold text-neutral-900">{stats?.ordersToday || 0}</p>
+              <p className="text-sm font-bold text-purple-600 uppercase tracking-wide">Pedidos Hoy</p>
+              <p className="mt-3 text-4xl font-black text-gradient">{stats?.ordersToday || 0}</p>
             </div>
-            <div className="rounded-full bg-green-100 p-3">
-              <svg className="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="rounded-2xl bg-gradient-to-br from-green-500 to-emerald-500 p-4 shadow-lg">
+              <svg className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
             </div>
           </div>
         </div>
 
-        <div className="rounded-lg border border-neutral-200 bg-white p-6 shadow-sm">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-neutral-600">Acciones Rápidas</p>
-              <Link
-                to="/admin/products/new"
-                className="mt-2 inline-block rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
-              >
-                Nuevo Producto
-              </Link>
-            </div>
-            <div className="rounded-full bg-purple-100 p-3">
-              <svg className="h-6 w-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div className="card-premium rounded-2xl border-2 border-transparent bg-white p-6 shadow-xl animate-scale-in"
+          style={{
+            background: `linear-gradient(white, white) padding-box, linear-gradient(135deg, #667eea, #764ba2) border-box`,
+            animationDelay: '300ms'
+          }}
+        >
+          <div className="flex flex-col items-center text-center">
+            <div className="rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 p-4 shadow-lg mb-4">
+              <svg className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
               </svg>
             </div>
+            <p className="text-sm font-bold text-purple-600 uppercase tracking-wide mb-3">Acciones Rápidas</p>
+            <Link
+              to="/admin/products/new"
+              className="btn-premium rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 px-5 py-3 text-sm font-bold text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110"
+            >
+              ✨ Nuevo Producto
+            </Link>
           </div>
         </div>
       </div>
 
       {/* Quick Links */}
-      <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mb-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         <Link
           to="/admin/products"
-          className="rounded-lg border border-neutral-200 bg-white p-6 shadow-sm transition hover:shadow-md"
+          className="card-premium group rounded-2xl border-2 border-transparent bg-white p-8 shadow-xl transition-all duration-500 hover:-translate-y-2 animate-fade-in"
+          style={{
+            background: `linear-gradient(white, white) padding-box, linear-gradient(135deg, #667eea, #764ba2) border-box`,
+            animationDelay: '400ms'
+          }}
         >
-          <h3 className="font-semibold text-neutral-900">Productos</h3>
-          <p className="mt-1 text-sm text-neutral-600">Gestionar catálogo</p>
+          <div className="text-4xl mb-4">📦</div>
+          <h3 className="font-black text-lg text-neutral-900 group-hover:text-gradient transition-all">Productos</h3>
+          <p className="mt-2 text-sm text-neutral-600">Gestionar catálogo</p>
         </Link>
 
         <Link
           to="/admin/categories"
-          className="rounded-lg border border-neutral-200 bg-white p-6 shadow-sm transition hover:shadow-md"
+          className="card-premium group rounded-2xl border-2 border-transparent bg-white p-8 shadow-xl transition-all duration-500 hover:-translate-y-2 animate-fade-in"
+          style={{
+            background: `linear-gradient(white, white) padding-box, linear-gradient(135deg, #f093fb, #f5576c) border-box`,
+            animationDelay: '500ms'
+          }}
         >
-          <h3 className="font-semibold text-neutral-900">Categorías</h3>
-          <p className="mt-1 text-sm text-neutral-600">Organizar productos</p>
+          <div className="text-4xl mb-4">🗂️</div>
+          <h3 className="font-black text-lg text-neutral-900 group-hover:text-gradient transition-all">Categorías</h3>
+          <p className="mt-2 text-sm text-neutral-600">Organizar productos</p>
         </Link>
 
         <Link
           to="/admin/banners"
-          className="rounded-lg border border-neutral-200 bg-white p-6 shadow-sm transition hover:shadow-md"
+          className="card-premium group rounded-2xl border-2 border-transparent bg-white p-8 shadow-xl transition-all duration-500 hover:-translate-y-2 animate-fade-in"
+          style={{
+            background: `linear-gradient(white, white) padding-box, linear-gradient(135deg, #4facfe, #00f2fe) border-box`,
+            animationDelay: '600ms'
+          }}
         >
-          <h3 className="font-semibold text-neutral-900">Banners</h3>
-          <p className="mt-1 text-sm text-neutral-600">Gestionar inicio</p>
+          <div className="text-4xl mb-4">🖼️</div>
+          <h3 className="font-black text-lg text-neutral-900 group-hover:text-gradient transition-all">Banners</h3>
+          <p className="mt-2 text-sm text-neutral-600">Gestionar inicio</p>
         </Link>
 
         <Link
           to="/admin/content"
-          className="rounded-lg border border-neutral-200 bg-white p-6 shadow-sm transition hover:shadow-md"
+          className="card-premium group rounded-2xl border-2 border-transparent bg-white p-8 shadow-xl transition-all duration-500 hover:-translate-y-2 animate-fade-in"
+          style={{
+            background: `linear-gradient(white, white) padding-box, linear-gradient(135deg, #43e97b, #38f9d7) border-box`,
+            animationDelay: '700ms'
+          }}
         >
-          <h3 className="font-semibold text-neutral-900">Contenido</h3>
-          <p className="mt-1 text-sm text-neutral-600">Páginas informativas</p>
+          <div className="text-4xl mb-4">📄</div>
+          <h3 className="font-black text-lg text-neutral-900 group-hover:text-gradient transition-all">Contenido</h3>
+          <p className="mt-2 text-sm text-neutral-600">Páginas informativas</p>
         </Link>
 
         <Link
           to="/admin/users"
-          className="rounded-lg border border-neutral-200 bg-white p-6 shadow-sm transition hover:shadow-md"
+          className="card-premium group rounded-2xl border-2 border-transparent bg-white p-8 shadow-xl transition-all duration-500 hover:-translate-y-2 animate-fade-in"
+          style={{
+            background: `linear-gradient(white, white) padding-box, linear-gradient(135deg, #fa709a, #fee140) border-box`,
+            animationDelay: '800ms'
+          }}
         >
-          <h3 className="font-semibold text-neutral-900">Usuarios</h3>
-          <p className="mt-1 text-sm text-neutral-600">Gestionar administradores</p>
+          <div className="text-4xl mb-4">👥</div>
+          <h3 className="font-black text-lg text-neutral-900 group-hover:text-gradient transition-all">Usuarios</h3>
+          <p className="mt-2 text-sm text-neutral-600">Gestionar administradores</p>
         </Link>
       </div>
 
       {/* Recent Orders */}
       {stats?.recentOrders && stats.recentOrders.length > 0 && (
-        <div className="rounded-lg border border-neutral-200 bg-white shadow-sm">
-          <div className="border-b border-neutral-200 px-6 py-4">
-            <h2 className="text-lg font-semibold text-neutral-900">Pedidos Recientes</h2>
+        <div className="card-premium rounded-3xl border-2 border-transparent bg-white shadow-2xl animate-scale-in"
+          style={{
+            background: `linear-gradient(white, white) padding-box, linear-gradient(135deg, #667eea, #f093fb) border-box`,
+            animationDelay: '900ms'
+          }}
+        >
+          <div className="px-8 py-6">
+            <h2 className="text-2xl font-black text-gradient flex items-center gap-3">
+              <span className="text-3xl">📋</span>
+              Pedidos Recientes
+            </h2>
           </div>
           <div className="divide-y divide-neutral-200">
             {stats.recentOrders.map((order: any) => (

@@ -104,32 +104,40 @@ export function RegisterPage() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
-      <header className="mb-10 text-center">
-        <h1 className="text-3xl font-bold text-neutral-900">
-          Crea tu cuenta JSP Detailing
+    <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8 animate-fade-in">
+      <header className="mb-12 text-center">
+        <div className="inline-block text-6xl mb-4 animate-float">✨</div>
+        <h1 className="heading-artistic mb-6">
+          Crea tu Cuenta
         </h1>
-        <p className="mt-2 text-sm text-neutral-600">
-          Registra tus datos para acceder a beneficios, historial de pedidos y promociones exclusivas.
+        <p className="mt-4 text-lg text-neutral-700 max-w-2xl mx-auto leading-relaxed">
+          🎁 Registra tus datos para acceder a beneficios, historial de pedidos y promociones exclusivas
         </p>
       </header>
 
       {success && (
-        <div className="mb-6 rounded-lg bg-green-50 border border-green-200 p-4 text-green-800">
-          <p className="font-medium">¡Cuenta creada exitosamente!</p>
-          <p className="text-sm mt-1">Te redirigiremos al login en un momento...</p>
+        <div className="mb-8 rounded-2xl bg-gradient-to-r from-green-500 to-emerald-500 border-2 border-white/20 p-6 text-white shadow-2xl animate-scale-in">
+          <p className="font-black text-xl flex items-center gap-2">
+            <span>🎉</span> ¡Cuenta creada exitosamente!
+          </p>
+          <p className="text-sm mt-2 opacity-90">Te redirigiremos al login en un momento...</p>
         </div>
       )}
 
       {error && (
-        <div className="mb-6 rounded-lg bg-red-50 border border-red-200 p-4 text-red-800">
-          <p className="font-medium">Error al crear cuenta</p>
-          <p className="text-sm mt-1">{error}</p>
+        <div className="mb-8 rounded-2xl bg-gradient-to-r from-red-500 to-pink-500 border-2 border-white/20 p-6 text-white shadow-2xl animate-scale-in">
+          <p className="font-black text-xl flex items-center gap-2">
+            <span>❌</span> Error al crear cuenta
+          </p>
+          <p className="text-sm mt-2 opacity-90">{error}</p>
         </div>
       )}
 
       <form
-        className="space-y-8 rounded-3xl border border-neutral-200 bg-white p-8 shadow-sm lg:p-10"
+        className="card-premium space-y-8 rounded-3xl border-2 border-transparent bg-white p-8 shadow-2xl lg:p-12"
+        style={{
+          background: `linear-gradient(white, white) padding-box, linear-gradient(135deg, #667eea, #764ba2, #f093fb) border-box`
+        }}
         onSubmit={handleSubmit(onSubmit)}
         noValidate
       >
@@ -141,7 +149,7 @@ export function RegisterPage() {
             <input
               id="firstName"
               type="text"
-              className="w-full rounded-xl border border-neutral-300 px-4 py-3 text-sm shadow-sm outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20"
+              className="w-full rounded-xl border-2 border-neutral-200 px-5 py-4 text-sm shadow-sm outline-none transition-all duration-300 focus:border-purple-500 focus:ring-4 focus:ring-purple-200 focus:scale-105"
               placeholder="Ej: Juan"
               {...register("firstName")}
             />
@@ -157,7 +165,7 @@ export function RegisterPage() {
             <input
               id="lastName"
               type="text"
-              className="w-full rounded-xl border border-neutral-300 px-4 py-3 text-sm shadow-sm outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20"
+              className="w-full rounded-xl border-2 border-neutral-200 px-5 py-4 text-sm shadow-sm outline-none transition-all duration-300 focus:border-purple-500 focus:ring-4 focus:ring-purple-200 focus:scale-105"
               placeholder="Ej: Pérez"
               {...register("lastName")}
             />
@@ -173,7 +181,7 @@ export function RegisterPage() {
             <input
               id="rut"
               type="text"
-              className="w-full rounded-xl border border-neutral-300 px-4 py-3 text-sm shadow-sm outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20"
+              className="w-full rounded-xl border-2 border-neutral-200 px-5 py-4 text-sm shadow-sm outline-none transition-all duration-300 focus:border-purple-500 focus:ring-4 focus:ring-purple-200 focus:scale-105"
               placeholder="12.345.678-9"
               {...register("rut")}
             />
@@ -187,7 +195,7 @@ export function RegisterPage() {
             <input
               id="email"
               type="email"
-              className="w-full rounded-xl border border-neutral-300 px-4 py-3 text-sm shadow-sm outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20"
+              className="w-full rounded-xl border-2 border-neutral-200 px-5 py-4 text-sm shadow-sm outline-none transition-all duration-300 focus:border-purple-500 focus:ring-4 focus:ring-purple-200 focus:scale-105"
               placeholder="tu.correo@ejemplo.cl"
               {...register("email")}
             />
@@ -203,7 +211,7 @@ export function RegisterPage() {
             <input
               id="phone"
               type="tel"
-              className="w-full rounded-xl border border-neutral-300 px-4 py-3 text-sm shadow-sm outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20"
+              className="w-full rounded-xl border-2 border-neutral-200 px-5 py-4 text-sm shadow-sm outline-none transition-all duration-300 focus:border-purple-500 focus:ring-4 focus:ring-purple-200 focus:scale-105"
               placeholder="+56 9 1234 5678"
               {...register("phone")}
             />
@@ -219,7 +227,7 @@ export function RegisterPage() {
             <input
               id="password"
               type="password"
-              className="w-full rounded-xl border border-neutral-300 px-4 py-3 text-sm shadow-sm outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20"
+              className="w-full rounded-xl border-2 border-neutral-200 px-5 py-4 text-sm shadow-sm outline-none transition-all duration-300 focus:border-purple-500 focus:ring-4 focus:ring-purple-200 focus:scale-105"
               placeholder="Crea una contraseña segura"
               {...register("password")}
             />
@@ -235,7 +243,7 @@ export function RegisterPage() {
             <input
               id="confirmPassword"
               type="password"
-              className="w-full rounded-xl border border-neutral-300 px-4 py-3 text-sm shadow-sm outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20"
+              className="w-full rounded-xl border-2 border-neutral-200 px-5 py-4 text-sm shadow-sm outline-none transition-all duration-300 focus:border-purple-500 focus:ring-4 focus:ring-purple-200 focus:scale-105"
               placeholder="Repite tu contraseña"
               {...register("confirmPassword")}
             />
@@ -271,10 +279,24 @@ export function RegisterPage() {
 
         <button
           type="submit"
-          className="w-full rounded-full bg-primary px-6 py-3 text-sm font-semibold text-white shadow-sm transition-transform hover:-translate-y-0.5 hover:bg-primary-dark disabled:cursor-not-allowed disabled:bg-primary/60"
+          className="btn-premium w-full rounded-2xl bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 px-8 py-5 text-lg font-black text-white shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(168,85,247,0.8)] disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-500 transform hover:-translate-y-2 hover:scale-105"
+          style={{
+            backgroundSize: '200% 100%',
+            animation: isSubmitting ? 'none' : 'gradientShift 3s ease infinite'
+          }}
           disabled={isSubmitting}
         >
-          {isSubmitting ? "Creando cuenta..." : "Crear cuenta"}
+          {isSubmitting ? (
+            <span className="flex items-center justify-center gap-2">
+              <span className="inline-block h-5 w-5 animate-spin rounded-full border-3 border-white border-r-transparent"></span>
+              Creando cuenta...
+            </span>
+          ) : (
+            <span className="flex items-center justify-center gap-2">
+              <span>🚀</span>
+              Crear cuenta
+            </span>
+          )}
         </button>
 
         <p className="text-center text-sm text-neutral-600">

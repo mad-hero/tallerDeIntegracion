@@ -99,8 +99,10 @@ export function AccountPage() {
 
   if (!isAuthenticated) {
     return (
-      <section className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="rounded-lg border border-neutral-200 bg-white p-12 text-center">
+      <section className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8 animate-fade-in">
+        <div className="rounded-3xl border-4 border-dashed border-purple-300 bg-gradient-to-br from-purple-50 via-white to-pink-50 p-16 text-center shadow-xl">
+          <div className="text-6xl mb-6">🔒</div>
+          <p className="text-xl font-bold text-gradient mb-4">Acceso Restringido</p>
           <p className="text-neutral-600">Debes iniciar sesión para ver tu cuenta</p>
         </div>
       </section>
@@ -110,70 +112,81 @@ export function AccountPage() {
   if (loading) {
     return (
       <section className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="text-center">Cargando...</div>
+        <div className="text-center py-20">
+          <div className="inline-block h-16 w-16 animate-spin rounded-full border-4 border-solid border-purple-600 border-r-transparent"></div>
+          <p className="mt-6 text-lg font-semibold text-gradient">Cargando...</p>
+        </div>
       </section>
     );
   }
 
   return (
-    <section className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
-      <header className="mb-8">
-        <h1 className="text-3xl font-bold text-neutral-900">Mi Cuenta</h1>
-        <p className="mt-2 text-sm text-neutral-600">
-          Administra tu perfil, direcciones y revisa tus pedidos.
+    <section className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8 animate-fade-in">
+      <header className="mb-12 text-center">
+        <div className="inline-block text-6xl mb-4 animate-float">👤</div>
+        <h1 className="heading-artistic mb-4">Mi Cuenta</h1>
+        <p className="mt-4 text-lg text-neutral-600">
+          ✨ Administra tu perfil, direcciones y revisa tus pedidos
         </p>
       </header>
 
       {/* Tabs */}
-      <div className="mb-6 border-b border-neutral-200">
-        <nav className="flex gap-4">
+      <div className="mb-8 rounded-2xl bg-white shadow-lg p-2">
+        <nav className="flex gap-2">
           <button
             onClick={() => setActiveTab("profile")}
-            className={`border-b-2 px-4 py-2 text-sm font-medium ${
+            className={`flex-1 rounded-xl px-6 py-4 text-sm font-bold transition-all duration-300 ${
               activeTab === "profile"
-                ? "border-primary text-primary"
-                : "border-transparent text-neutral-600 hover:text-neutral-900"
+                ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg scale-105"
+                : "text-neutral-600 hover:bg-purple-50 hover:text-purple-900"
             }`}
           >
-            Perfil
+            👤 Perfil
           </button>
           <button
             onClick={() => setActiveTab("addresses")}
-            className={`border-b-2 px-4 py-2 text-sm font-medium ${
+            className={`flex-1 rounded-xl px-6 py-4 text-sm font-bold transition-all duration-300 ${
               activeTab === "addresses"
-                ? "border-primary text-primary"
-                : "border-transparent text-neutral-600 hover:text-neutral-900"
+                ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg scale-105"
+                : "text-neutral-600 hover:bg-purple-50 hover:text-purple-900"
             }`}
           >
-            Direcciones
+            📍 Direcciones
           </button>
           <button
             onClick={() => setActiveTab("orders")}
-            className={`border-b-2 px-4 py-2 text-sm font-medium ${
+            className={`flex-1 rounded-xl px-6 py-4 text-sm font-bold transition-all duration-300 ${
               activeTab === "orders"
-                ? "border-primary text-primary"
-                : "border-transparent text-neutral-600 hover:text-neutral-900"
+                ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg scale-105"
+                : "text-neutral-600 hover:bg-purple-50 hover:text-purple-900"
             }`}
           >
-            Pedidos
+            📦 Pedidos
           </button>
         </nav>
       </div>
 
       {/* Profile Tab */}
       {activeTab === "profile" && (
-        <div className="rounded-lg border border-neutral-200 bg-white p-6">
-          <h2 className="mb-6 text-lg font-semibold text-neutral-900">Información Personal</h2>
+        <div className="card-premium rounded-3xl border-2 border-transparent bg-white p-8 shadow-2xl animate-scale-in"
+          style={{
+            background: `linear-gradient(white, white) padding-box, linear-gradient(135deg, #667eea, #764ba2) border-box`
+          }}
+        >
+          <h2 className="mb-8 text-2xl font-black text-gradient flex items-center gap-3">
+            <span className="text-3xl">📝</span>
+            Información Personal
+          </h2>
           
           {message && (
             <div
-              className={`mb-4 rounded-lg p-4 ${
+              className={`mb-6 rounded-2xl p-5 shadow-lg animate-scale-in border-2 border-white/20 ${
                 message.includes("exitosamente")
-                  ? "bg-green-50 text-green-800"
-                  : "bg-red-50 text-red-800"
+                  ? "bg-gradient-to-r from-green-500 to-emerald-500 text-white"
+                  : "bg-gradient-to-r from-red-500 to-pink-500 text-white"
               }`}
             >
-              {message}
+              <p className="font-bold">{message.includes("exitosamente") ? "✅" : "❌"} {message}</p>
             </div>
           )}
 
