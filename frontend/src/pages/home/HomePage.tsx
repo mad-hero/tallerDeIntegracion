@@ -82,6 +82,8 @@ export function HomePage() {
                 <img
                   src={getOptimizedImageUrl(banners[0].image, { width: 1200, quality: 85, format: 'auto' }) || "https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=1200&q=85"}
                   alt={banners[0].title}
+                  width="1200"
+                  height="900"
                   className="relative aspect-[4/3] w-full rounded-3xl object-cover shadow-2xl lg:aspect-auto lg:h-[500px] transition-transform duration-500 group-hover:scale-[1.02]"
                   loading="eager"
                   fetchPriority="high"
@@ -133,6 +135,8 @@ export function HomePage() {
                 <img
                   src="https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=1000&q=80"
                   alt="Detalle automotriz profesional"
+                  width="1000"
+                  height="750"
                   className="aspect-[4/3] w-full rounded-3xl object-cover shadow-2xl lg:aspect-auto lg:h-[500px]"
                   loading="lazy"
                 />
@@ -198,6 +202,8 @@ export function HomePage() {
                     <img
                       src={category.image || "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80"}
                       alt={category.name}
+                      width="800"
+                      height="600"
                       className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110 group-hover:rotate-2"
                       loading="lazy"
                     />

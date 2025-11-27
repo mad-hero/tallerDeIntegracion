@@ -15,7 +15,19 @@
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600&display=swap"
       rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
     />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
+    <style>
+      /* Prevent FOIT/FOUT by using system fonts initially */
+      body { font-family: system-ui, -apple-system, sans-serif; }
+    </style>
     <title>JSP Detailing</title>
   </head>
   <body>

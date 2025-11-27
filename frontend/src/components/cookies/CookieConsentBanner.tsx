@@ -88,10 +88,13 @@ export function CookieConsentBanner() {
     }));
   };
 
-  if (!isVisible) return null;
-
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-[100] animate-slide-in-up">
+    <div 
+      className={`fixed bottom-0 left-0 right-0 z-[100] transition-transform duration-300 ${
+        isVisible ? 'translate-y-0' : 'translate-y-full'
+      }`}
+      style={{ pointerEvents: isVisible ? 'auto' : 'none' }}
+    >
       <div className="bg-gradient-to-r from-purple-900 via-pink-900 to-purple-900 text-white shadow-2xl border-t-4 border-purple-400">
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
           {!showPreferences ? (
