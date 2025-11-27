@@ -144,7 +144,8 @@ class ApiService {
 
   async searchProducts(query: string, limit: number = 10) {
     const response = await this.api.get('/products/search', { params: { q: query, limit } });
-    return response.data;
+    // Backend returns { products, categories, brands }, we only need products
+    return response.data.products || [];
   }
 
   // Category endpoints

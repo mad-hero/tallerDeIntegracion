@@ -5,7 +5,6 @@ import { useCart } from "../../context/CartContext";
 import { SearchAutocomplete } from "../search/SearchAutocomplete";
 
 const navItems = [
-  { to: "/", label: "Inicio" },
   { to: "/productos", label: "Productos" },
   { to: "/quienes-somos", label: "Quiénes Somos" },
   { to: "/politicas", label: "Políticas" },
