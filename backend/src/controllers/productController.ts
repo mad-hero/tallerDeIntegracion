@@ -194,7 +194,7 @@ export async function searchProducts(req: Request, res: Response): Promise<void>
       status: 'active',
     })
       .limit(limitNum)
-      .select('name slug images basePrice offerPrice')
+      .select('name slug images basePrice offerPrice stock brand')
       .lean();
 
     // Search categories
