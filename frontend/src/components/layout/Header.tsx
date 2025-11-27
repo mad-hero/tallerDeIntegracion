@@ -102,9 +102,13 @@ export function Header() {
             <>
               <Link
                 to="/login"
-                className="rounded-full border border-neutral-200 px-4 py-2 text-sm font-medium text-neutral-700 hover:border-blue-500 hover:text-blue-600 hover:bg-blue-50 transition-all duration-300 hover:-translate-y-0.5"
+                className="group relative flex h-10 w-10 items-center justify-center rounded-full border-2 border-neutral-300 bg-white text-xl hover:border-blue-500 hover:bg-blue-50 transition-all duration-300 hover:-translate-y-0.5 hover:scale-110"
+                title="Iniciar sesión"
               >
-                Iniciar sesión
+                👤
+                <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md bg-neutral-900 px-2 py-1 text-xs font-medium text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100 pointer-events-none">
+                  Iniciar sesión
+                </span>
               </Link>
               <Link
                 to="/registro"
