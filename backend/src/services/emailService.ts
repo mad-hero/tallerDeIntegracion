@@ -479,6 +479,202 @@ export async function sendOrderConfirmation(
 }
 
 /**
+ * Send contact form notification to admin
+ */
+export async function sendContactFormToAdmin(data: {
+  type: string;
+  name: string;
+  email: string;
+  phone: string;
+  company: string;
+  message: string;
+  preferredDate?: string;
+  preferredTime?: string;
+  address?: string;
+  numberOfParticipants?: number;
+}): Promise<void> {
+  if (!resend && !transporter) {
+    console.log('Email service not configured. Contact form notification not sent.');
+    return;
+  }
+
+  const adminEmail = process.env.ADMIN_EMAIL || 'admin@jspdetailing.cl';
+
+  const typeLabels: { [key: string]: { label: string; icon: string; color: string } } = {
+    quote: { label: 'Cotización', icon: '💰', color: '#007bff' },
+    pickup: { label: 'Agendar Retiro', icon: '🚚', color: '#28a745' },
+    training: { label: 'Capacitación', icon: '🎓', color: '#ffc107' },
+    general: { label: 'Consulta General', icon: '📧', color: '#6c757d' },
+  };
+
+  const typeInfo = typeLabels[data.type] || typeLabels.general;
+
+  const html = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background-color: ${typeInfo.color}; color: white; padding: 20px; text-align: center; border-radius: 5px 5px 0 0; }
+        .content { background-color: #f9f9f9; padding: 20px; }
+        .customer-info { background-color: white; padding: 15px; margin: 20px 0; border-radius: 5px; border-left: 4px solid ${typeInfo.color}; }
+        .message-box { background-color: white; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid ${typeInfo.color}; }
+        .details-box { background-color: #fff3cd; padding: 15px; border-radius: 5px; margin: 20px 0; }
+        .footer { margin-top: 30px; font-size: 12px; color: #666; text-align: center; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header">
+          <h1>${typeInfo.icon} Nueva Solicitud: ${typeInfo.label}</h1>
+        </div>
+        <div class="content">
+          <h3>Información del Cliente:</h3>
+          <div class="customer-info">
+            <p><strong>Nombre:</strong> ${data.name}</p>
+            <p><strong>Email:</strong> <a href="mailto:${data.email}">${data.email}</a></p>
+            <p><strong>Teléfono:</strong> <a href="tel:${data.phone}">${data.phone}</a></p>
+            ${data.company ? `<p><strong>Empresa:</strong> ${data.company}</p>` : ''}
+          </div>
+          
+          <h3>Mensaje:</h3>
+          <div class="message-box">
+            <p>${data.message.replace(/\n/g, '<br>')}</p>
+          </div>
+          
+          ${data.preferredDate || data.preferredTime || data.address || data.numberOfParticipants ? `
+          <h3>Detalles Adicionales:</h3>
+          <div class="details-box">
+            ${data.preferredDate ? `<p><strong>Fecha Preferida:</strong> ${data.preferredDate}</p>` : ''}
+            ${data.preferredTime ? `<p><strong>Hora Preferida:</strong> ${data.preferredTime}</p>` : ''}
+            ${data.address ? `<p><strong>Dirección:</strong> ${data.address}</p>` : ''}
+            ${data.numberOfParticipants ? `<p><strong>Número de Participantes:</strong> ${data.numberOfParticipants}</p>` : ''}
+          </div>
+          ` : ''}
+          
+          <p style="margin-top: 30px;"><strong>⏰ Acción requerida:</strong> Contactar al cliente dentro de las próximas 24 horas.</p>
+        </div>
+        <div class="footer">
+          <p>© ${new Date().getFullYear()} JSP Detailing. Todos los derechos reservados.</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  try {
+    await sendEmail(
+      adminEmail,
+      `${typeInfo.icon} Nueva ${typeInfo.label} de ${data.name} - JSP Detailing`,
+      html
+    );
+    console.log(`✅ Contact form notification sent to admin (${adminEmail})`);
+  } catch (error) {
+    console.error('❌ Error sending contact form notification to admin:', error);
+  }
+}
+
+/**
+ * Send contact form confirmation to customer
+ */
+export async function sendContactFormConfirmation(data: {
+  type: string;
+  name: string;
+  email: string;
+  message: string;
+}): Promise<void> {
+  if (!resend && !transporter) {
+    console.log('Email service not configured. Contact form confirmation not sent.');
+    return;
+  }
+
+  const typeLabels: { [key: string]: { label: string; icon: string; message: string } } = {
+    quote: {
+      label: 'Cotización',
+      icon: '💰',
+      message: 'Hemos recibido tu solicitud de cotización. Nuestro equipo de ventas revisará tu solicitud y te contactará dentro de las próximas 24 horas con una cotización personalizada.',
+    },
+    pickup: {
+      label: 'Agendar Retiro',
+      icon: '🚚',
+      message: 'Hemos recibido tu solicitud para agendar un retiro. Nuestro equipo de logística se pondrá en contacto contigo dentro de las próximas 24 horas para coordinar la fecha y hora del retiro.',
+    },
+    training: {
+      label: 'Capacitación',
+      icon: '🎓',
+      message: 'Hemos recibido tu solicitud de capacitación. Nuestro equipo de capacitación revisará tu solicitud y te contactará dentro de las próximas 24 horas para coordinar los detalles de la capacitación.',
+    },
+    general: {
+      label: 'Consulta',
+      icon: '📧',
+      message: 'Hemos recibido tu consulta. Nuestro equipo revisará tu mensaje y te responderá dentro de las próximas 24 horas.',
+    },
+  };
+
+  const typeInfo = typeLabels[data.type] || typeLabels.general;
+
+  const html = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+        .content { background-color: #f9f9f9; padding: 30px; }
+        .message-box { background-color: white; padding: 20px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #667eea; }
+        .footer { margin-top: 30px; font-size: 12px; color: #666; text-align: center; }
+        .button { display: inline-block; padding: 12px 24px; background-color: #667eea; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header">
+          <h1 style="margin: 0;">${typeInfo.icon} Solicitud Recibida</h1>
+        </div>
+        <div class="content">
+          <p>Hola <strong>${data.name}</strong>,</p>
+          <p>${typeInfo.message}</p>
+          
+          <div class="message-box">
+            <p style="margin: 0; color: #666; font-style: italic;">"${data.message}"</p>
+          </div>
+          
+          <p>Si tienes alguna pregunta adicional, no dudes en contactarnos:</p>
+          <ul>
+            <li>📧 Email: <a href="mailto:ventas@jspdetailing.cl">ventas@jspdetailing.cl</a></li>
+            <li>📱 Teléfono: +56 9 1234 5678</li>
+          </ul>
+          
+          <p style="text-align: center;">
+            <a href="${frontendURL}" class="button">Visitar Nuestro Sitio</a>
+          </p>
+        </div>
+        <div class="footer">
+          <p>Gracias por confiar en JSP Detailing</p>
+          <p>© ${new Date().getFullYear()} JSP Detailing. Todos los derechos reservados.</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  try {
+    await sendEmail(
+      data.email,
+      `${typeInfo.icon} Solicitud de ${typeInfo.label} Recibida - JSP Detailing`,
+      html
+    );
+    console.log(`✅ Contact form confirmation sent to ${data.email}`);
+  } catch (error) {
+    console.error('❌ Error sending contact form confirmation:', error);
+  }
+}
+
+/**
  * Test email connection
  */
 export async function testEmailConnection(): Promise<boolean> {

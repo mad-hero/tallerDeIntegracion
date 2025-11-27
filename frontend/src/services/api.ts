@@ -196,6 +196,23 @@ class ApiService {
     return response.data;
   }
 
+  // Contact form endpoints
+  async submitContactForm(data: {
+    type: 'quote' | 'pickup' | 'training' | 'general';
+    name: string;
+    email: string;
+    phone: string;
+    company?: string;
+    message: string;
+    preferredDate?: string;
+    preferredTime?: string;
+    address?: string;
+    numberOfParticipants?: number;
+  }) {
+    const response = await this.api.post('/contact', data);
+    return response.data;
+  }
+
   // User endpoints
   async getProfile(): Promise<User> {
     const response = await this.api.get('/user/profile');

@@ -6,6 +6,7 @@ import cartRoutes from './cartRoutes';
 import userRoutes from './userRoutes';
 import orderRoutes from './orderRoutes';
 import adminRoutes from './adminRoutes';
+import contactRoutes from './contactRoutes';
 import { HomeBanner } from '../models/HomeBanner';
 import { ContentPage } from '../models/ContentPage';
 
@@ -15,6 +16,7 @@ const router = Router();
 router.use('/auth', authRoutes);
 router.use('/products', productRoutes);
 router.use('/categories', categoryRoutes);
+router.use('/contact', contactRoutes);
 
 // Get active home banners
 router.get('/home/banners', async (_req, res) => {
