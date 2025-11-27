@@ -28,8 +28,8 @@ export function Header() {
       backgroundSize: '300% 100%',
       animation: 'gradientShift 6s ease infinite'
     }}>
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-        <div className="flex items-center gap-3 animate-fade-in">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-8 px-4 py-4 sm:px-6 lg:px-8">
+        <div className="flex items-center gap-3 animate-fade-in flex-shrink-0">
           <Link to="/" className="flex items-center gap-3 group">
             <img 
               src="/jsp.jpg" 
