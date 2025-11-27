@@ -213,7 +213,7 @@ export async function searchProducts(req: Request, res: Response): Promise<void>
     const brands = await Product.distinct('brand', {
       brand: new RegExp(q, 'i'),
       status: 'active',
-    }).limit(5);
+    });
 
     const formattedProducts = products.map((product: any) => ({
       ...product,
@@ -226,7 +226,7 @@ export async function searchProducts(req: Request, res: Response): Promise<void>
     res.json({
       products: formattedProducts,
       categories,
-      brands: brands.filter(Boolean),
+      brands: brands.filter(Boolean).slice(0, 5), // Limit to 5 brands
     });
   } catch (error) {
     console.error('Search products error:', error);
