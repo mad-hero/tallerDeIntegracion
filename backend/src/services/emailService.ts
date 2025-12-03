@@ -69,8 +69,8 @@ else {
 async function sendEmail(to: string, subject: string, html: string): Promise<void> {
   if (resend) {
     // Resend
+    // Use test domain only if explicitly configured, otherwise use the configured domain
     let actualFrom = useResendTestDomain ? 'onboarding@resend.dev' : emailFrom;
-    let retryWithTestDomain = false;
     
     try {
       console.log(`📧 Attempting to send email via Resend to ${to} from ${actualFrom}`);
@@ -90,108 +90,80 @@ async function sendEmail(to: string, subject: string, html: string): Promise<voi
         const statusCode = result.error.statusCode;
         console.error('❌ Resend API returned an error:', result.error);
         
-        // Check for the specific error about only sending to own email
+        // Check for the specific error about only sending to own email (domain not verified)
         if (statusCode === 403 && 
             (errorMessage.includes('You can only send testing emails to your own email address') ||
              errorMessage.includes('verify a domain'))) {
-          console.warn('⚠️  Domain not verified. Attempting to use Resend test domain...');
-          retryWithTestDomain = true;
-        } else {
-          // Check for other specific Resend errors
-          if (errorMessage.includes('Invalid `to` field') || 
-              errorMessage.includes('not verified') ||
-              errorMessage.includes('domain not verified') ||
-              errorMessage.includes('email not verified')) {
-            console.error('🚨 CRITICAL: Email address or domain not verified in Resend!');
-            console.error('🚨 This email will NOT be sent. Only verified emails work with unverified domains.');
-            console.error('🚨 Solution: Verify the domain in Resend dashboard OR verify this email address in Resend.');
-            throw new Error(`Email not verified in Resend: ${to}. Only verified email addresses can receive emails when domain is not verified.`);
-          }
-          
-          throw new Error(`Resend API error: ${errorMessage}`);
+          console.error('🚨 CRITICAL: Domain is NOT verified in Resend!');
+          console.error(`🚨 Current FROM address: ${actualFrom}`);
+          console.error(`🚨 Attempted TO address: ${to}`);
+          console.error('🚨 Resend only allows sending to your account email when domain is not verified.');
+          console.error('');
+          console.error('🔧 SOLUTION:');
+          console.error('   1. Go to https://resend.com/domains');
+          console.error('   2. Verify your domain: jspdetailing.cl');
+          console.error('   3. Make sure DNS records are correctly configured');
+          console.error('   4. Wait for domain verification to complete');
+          console.error('   5. Once verified, emails will work with noreply@jspdetailing.cl');
+          console.error('');
+          console.error('⚠️  NOTE: The test domain (onboarding@resend.dev) only works if you have a verified domain.');
+          console.error('⚠️  If domain is not verified, you can only send to your account email.');
+          throw new Error(`Domain not verified in Resend. Please verify jspdetailing.cl at https://resend.com/domains`);
         }
+        
+        // Check for other specific Resend errors
+        if (errorMessage.includes('Invalid `to` field') || 
+            errorMessage.includes('not verified') ||
+            errorMessage.includes('domain not verified') ||
+            errorMessage.includes('email not verified')) {
+          console.error('🚨 CRITICAL: Email address or domain not verified in Resend!');
+          console.error('🚨 This email will NOT be sent.');
+          throw new Error(`Email not verified in Resend: ${to}`);
+        }
+        
+        throw new Error(`Resend API error: ${errorMessage}`);
+      }
+      
+      // Check if email was successfully queued
+      if (result.data && result.data.id) {
+        console.log(`✅ Email queued successfully with ID: ${result.data.id}`);
+        console.log(`✅ Email will be sent from: ${actualFrom}`);
+        console.log(`✅ Email will be sent to: ${to}`);
+        return; // Success, exit early
       } else {
-        // Check if email was successfully queued
-        if (result.data && result.data.id) {
-          console.log(`✅ Email queued successfully with ID: ${result.data.id}`);
-          return; // Success, exit early
-        } else {
-          console.warn('⚠️  Resend response missing email ID. Email may not have been sent.');
-          console.warn('⚠️  This might indicate the domain is not verified in Resend.');
-        }
+        console.warn('⚠️  Resend response missing email ID. Email may not have been sent.');
+        throw new Error('Resend API did not return email ID');
       }
     } catch (error: any) {
       const errorMessage = error?.message || '';
-      const errorString = JSON.stringify(error);
       const statusCode = error?.statusCode || error?.response?.statusCode;
       
       // Check for the specific 403 error about only sending to own email
       if (statusCode === 403 && 
           (errorMessage.includes('You can only send testing emails to your own email address') ||
            errorMessage.includes('verify a domain'))) {
-        console.warn('⚠️  Domain not verified. Attempting to use Resend test domain...');
-        retryWithTestDomain = true;
-      } else {
-        console.error('❌ Error in Resend sendEmail:', error);
-        
-        // Check for other specific error patterns
-        if (errorMessage.includes('not verified') || 
-            errorString.includes('not verified') ||
-            errorMessage.includes('Invalid `to` field') ||
-            statusCode === 422) {
-          console.error('🚨 CRITICAL: Email verification issue detected!');
-          console.error('🚨 The email address or domain is not verified in Resend.');
-          console.error('🚨 Resend only allows sending to verified emails when domain is not verified.');
-          console.error(`🚨 Email attempted: ${to}`);
-          console.error(`🚨 From address: ${actualFrom}`);
-          console.error('🚨 SOLUTION:');
-          console.error('   1. Go to Resend dashboard: https://resend.com/domains');
-          console.error('   2. Verify your domain OR');
-          console.error('   3. Add this email to your verified emails list');
-        }
-        
-        console.error('❌ Error details:', {
-          message: error?.message,
-          name: error?.name,
-          statusCode: statusCode,
-          response: error?.response,
-        });
-        throw error;
+        console.error('🚨 CRITICAL: Domain is NOT verified in Resend!');
+        console.error(`🚨 Current FROM address: ${actualFrom}`);
+        console.error(`🚨 Attempted TO address: ${to}`);
+        console.error('🚨 Resend only allows sending to your account email when domain is not verified.');
+        console.error('');
+        console.error('🔧 SOLUTION:');
+        console.error('   1. Go to https://resend.com/domains');
+        console.error('   2. Verify your domain: jspdetailing.cl');
+        console.error('   3. Make sure DNS records are correctly configured');
+        console.error('   4. Wait for domain verification to complete');
+        console.error('   5. Once verified, emails will work with noreply@jspdetailing.cl');
+        throw new Error(`Domain not verified in Resend. Please verify jspdetailing.cl at https://resend.com/domains`);
       }
-    }
-    
-    // Retry with test domain if needed
-    if (retryWithTestDomain && actualFrom !== 'onboarding@resend.dev') {
-      console.log('🔄 Retrying with Resend test domain (onboarding@resend.dev)...');
-      actualFrom = 'onboarding@resend.dev';
-      try {
-        const result = await resend.emails.send({
-          from: actualFrom,
-          to,
-          subject,
-          html,
-        });
-        
-        console.log(`📧 Resend API response (test domain):`, JSON.stringify(result, null, 2));
-        
-        if (result.error) {
-          const errorMessage = result.error.message || JSON.stringify(result.error);
-          console.error('❌ Resend API error even with test domain:', result.error);
-          throw new Error(`Resend API error: ${errorMessage}`);
-        }
-        
-        if (result.data && result.data.id) {
-          console.log(`✅ Email queued successfully with test domain (ID: ${result.data.id})`);
-          console.log(`⚠️  NOTE: Using Resend test domain. Verify your domain at https://resend.com/domains to use your own domain.`);
-        } else {
-          console.warn('⚠️  Resend response missing email ID even with test domain.');
-          throw new Error('Resend API did not return email ID');
-        }
-      } catch (retryError: any) {
-        console.error('❌ Error retrying with test domain:', retryError);
-        console.error('🚨 CRITICAL: Cannot send email. Please verify your domain at https://resend.com/domains');
-        throw retryError;
-      }
+      
+      console.error('❌ Error in Resend sendEmail:', error);
+      console.error('❌ Error details:', {
+        message: error?.message,
+        name: error?.name,
+        statusCode: statusCode,
+        response: error?.response,
+      });
+      throw error;
     }
   } else if (transporter) {
     // Nodemailer
