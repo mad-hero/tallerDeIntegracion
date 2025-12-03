@@ -140,6 +140,8 @@ export function CartPage() {
                   <img
                     src={getImageUrl(item.product.images[0])}
                     alt={item.product.name}
+                    width="112"
+                    height="112"
                     className="h-28 w-28 object-cover transition-transform duration-500 hover:scale-110"
                   />
                 </div>

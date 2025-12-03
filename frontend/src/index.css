@@ -90,6 +90,13 @@
     color: white;
     text-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
   }
+  
+  /* Prevent layout shift for images */
+  img {
+    aspect-ratio: attr(width) / attr(height);
+    max-width: 100%;
+    height: auto;
+  }
 }
 
 @layer components {

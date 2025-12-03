@@ -64,7 +64,7 @@ export function SearchAutocomplete({
       } finally {
         setIsLoading(false);
       }
-    }, 300); // 300ms debounce
+    }, 200); // 200ms debounce
 
     return () => {
       if (debounceTimer.current) {
@@ -209,6 +209,8 @@ export function SearchAutocomplete({
                     <img
                       src={getImageUrl(product.images[0])}
                       alt={product.name}
+                      width="64"
+                      height="64"
                       className="h-full w-full object-cover transition-transform duration-300 hover:scale-110"
                       loading="lazy"
                     />

@@ -94,6 +94,8 @@ export function ProductDetailPage() {
                 <img
                   src={getImageUrl(product.images[selectedImage])}
                   alt={product.name}
+                  width="600"
+                  height="600"
                   className="h-full w-full object-cover"
                 />
               </div>
@@ -112,6 +114,8 @@ export function ProductDetailPage() {
                       <img
                         src={getImageUrl(img)}
                         alt={`${product.name} ${idx + 1}`}
+                        width="80"
+                        height="80"
                         className="h-full w-full object-cover"
                       />
                     </button>

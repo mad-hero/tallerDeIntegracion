@@ -172,6 +172,8 @@ export function ProductsPage() {
                           <img
                             src={getImageUrl(product.images[0])}
                             alt={product.name}
+                            width="400"
+                            height="400"
                             className="h-full w-full object-cover transition-all duration-700 group-hover:scale-125 group-hover:rotate-3"
                             loading="lazy"
                           />
