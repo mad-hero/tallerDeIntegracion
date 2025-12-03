@@ -41,7 +41,7 @@ export function HomePage() {
   return (
     <div className="space-y-16">
       {/* Hero Section with Banners */}
-      <section className="bg-gradient-to-br from-blue-50 via-white to-purple-50 animate-gradient">
+      <section className="bg-gradient-to-br from-blue-50 via-white to-purple-50 animate-gradient min-h-[400px] sm:min-h-[500px] lg:min-h-[600px]">
         {loadingBanners ? (
           <div className="mx-auto max-w-7xl px-4 py-24 text-center">
             <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-blue-600 border-r-transparent"></div>
