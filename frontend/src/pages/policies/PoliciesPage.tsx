@@ -161,12 +161,12 @@ export function PoliciesPage() {
             <p className="text-neutral-700 leading-relaxed">
               Escríbenos a{" "}
               <a
-                href="mailto:postventa@jspdetailing.cl"
+                href="mailto:jspdetailing627@gmail.com"
                 className="link-underline font-bold text-purple-600 hover:text-gradient"
               >
-                postventa@jspdetailing.cl
+                jspdetailing627@gmail.com
               </a>{" "}
-              o llámanos al <span className="font-bold text-gradient">+56 9 1234 5678</span>.
+              o llámanos al <a href="tel:+56930828558" className="font-bold text-gradient hover:text-purple-600">+56930828558</a>.
             </p>
           </div>
         </div>

@@ -300,7 +300,7 @@ export function HomePage() {
               { title: "Webpay Plus", description: "Aceptamos tarjetas de débito y crédito.", emoji: "💳", gradient: "#667eea, #764ba2" },
               { title: "Transferencia", description: "Pagos directos a cuenta JSP Detailing.", emoji: "🏦", gradient: "#f093fb, #f5576c" },
               { title: "Mercado Pago", description: "Cuotas sin interés con bancos seleccionados.", emoji: "💰", gradient: "#4facfe, #00f2fe" },
-              { title: "SERNAC", description: "Cumplimos normativa Ley 19.496 y SERNAC.", emoji: "✅", gradient: "#43e97b, #38f9d7" },
+              { title: "SERNAC", description: "Cumplimos normativa Ley 21.398 y SERNAC.", emoji: "✅", gradient: "#43e97b, #38f9d7" },
             ].map((item, index) => (
               <div
                 key={item.title}
