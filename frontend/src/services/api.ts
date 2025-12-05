@@ -63,7 +63,13 @@ class ApiService {
           } catch (refreshError) {
             localStorage.removeItem('accessToken');
             localStorage.removeItem('refreshToken');
-            window.location.href = '/login';
+            // Only redirect to login if not already on a public page
+            // Don't redirect during initial auth check (when checking profile on mount)
+            const isProfileCheck = originalRequest.url?.includes('/user/profile');
+            const isPublicRoute = ['/login', '/register', '/'].includes(window.location.pathname);
+            if (!isProfileCheck && !isPublicRoute) {
+              window.location.href = '/login';
+            }
             return Promise.reject(refreshError);
           }
         }

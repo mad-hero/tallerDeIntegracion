@@ -51,8 +51,11 @@ export function AccountPage() {
         phone: profile.phone,
         email: profile.email,
       });
-    } catch (error) {
-      console.error("Error loading profile:", error);
+    } catch (error: any) {
+      // Silently handle 401 errors (user will be redirected by interceptor if needed)
+      if (error?.response?.status !== 401) {
+        console.error("Error loading profile:", error);
+      }
     } finally {
       setLoading(false);
     }

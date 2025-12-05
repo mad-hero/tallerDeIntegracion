@@ -23,7 +23,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Check if user is logged in on mount
     const token = localStorage.getItem('accessToken');
     if (token) {
-      refreshUser().catch(() => {
+      refreshUser().catch((error) => {
+        // Silently handle expected 401 errors (expired/invalid tokens)
+        // Only log unexpected errors
+        if (error?.response?.status !== 401) {
+          console.error('Error refreshing user:', error);
+        }
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
         setUser(null);
@@ -38,9 +43,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const userData = await api.getProfile();
       setUser(userData);
-    } catch (error) {
+    } catch (error: any) {
       setUser(null);
-      throw error;
+      // Don't throw 401 errors - they're expected when token is invalid
+      if (error?.response?.status !== 401) {
+        throw error;
+      }
     } finally {
       setLoading(false);
     }
