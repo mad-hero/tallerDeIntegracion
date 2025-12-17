@@ -135,7 +135,6 @@ export function ProductsPage() {
                   <option value="newest">Más recientes</option>
                   <option value="price-low">Precio: menor a mayor</option>
                   <option value="price-high">Precio: mayor a menor</option>
-                  <option value="popular">Más populares</option>
                 </select>
               </div>
             </div>
