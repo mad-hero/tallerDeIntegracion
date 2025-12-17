@@ -28,7 +28,7 @@ export async function getCart(req: AuthRequest, res: Response): Promise<void> {
       .lean();
 
     // Calculate totals
-    let subtotal = 0;
+    let subtotal = 0; // Subtotal without IVA
     const items = [];
 
     for (const item of cartItems) {
@@ -41,9 +41,10 @@ export async function getCart(req: AuthRequest, res: Response): Promise<void> {
 
       const basePrice = product.basePrice + (variant?.priceModifier || 0);
       const priceWithIVA = calculatePriceWithIVA(basePrice);
-      const itemSubtotal = priceWithIVA * item.quantity;
+      const itemSubtotalWithoutIVA = basePrice * item.quantity; // Subtotal without IVA
+      const itemSubtotalWithIVA = priceWithIVA * item.quantity; // For display
 
-      subtotal += itemSubtotal;
+      subtotal += itemSubtotalWithoutIVA; // Accumulate base price subtotal
 
       items.push({
         id: item._id,
@@ -63,13 +64,14 @@ export async function getCart(req: AuthRequest, res: Response): Promise<void> {
           : null,
         quantity: item.quantity,
         price: priceWithIVA,
-        subtotal: itemSubtotal,
+        subtotal: itemSubtotalWithIVA, // Show with IVA for line item
         stock: variant ? variant.stock : product.stock,
       });
     }
 
+    // Calculate IVA from base subtotal (19%)
     const iva = Math.round(subtotal * 0.19);
-    const total = subtotal;
+    const total = subtotal + iva; // Total = subtotal + IVA
 
     res.json({
       items,
