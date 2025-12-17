@@ -69,8 +69,9 @@ export function CheckoutPage() {
     } catch (error: any) {
       const errorMessage = error.response?.data?.error || "Error al procesar pedido";
       
-      // If products are no longer available, refresh cart and redirect
-      if (errorMessage.includes('ya no están disponibles') || errorMessage.includes('han sido eliminados')) {
+      // If products no longer exist or were removed, refresh cart and redirect
+      if (errorMessage.includes('ya no existen') || errorMessage.includes('han sido eliminados') || 
+          errorMessage.includes('Stock insuficiente')) {
         alert(errorMessage);
         await refreshCart(); // Reload cart to show updated items
         navigate("/carro");

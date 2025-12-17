@@ -48,16 +48,13 @@ export async function createOrder(req: AuthRequest, res: Response): Promise<void
 
     console.log(`📦 Creating order for user ${req.user.userId}, found ${cartItems.length} cart items`);
 
-    // First pass: Clean invalid items from cart
+    // First pass: Clean invalid items from cart (only products that don't exist)
     const invalidItems = [];
     for (const item of cartItems) {
       const product = item.productId as any;
       
       if (!product || typeof product !== 'object') {
         console.error(`❌ Product not found for cart item ${item._id}, productId: ${item.productId}`);
-        invalidItems.push(item._id);
-      } else if (product.status !== 'active') {
-        console.error(`❌ Product ${product._id} (${product.name}) is not active, status: ${product.status}`);
         invalidItems.push(item._id);
       }
     }
@@ -66,7 +63,7 @@ export async function createOrder(req: AuthRequest, res: Response): Promise<void
     if (invalidItems.length > 0) {
       await CartItem.deleteMany({ _id: { $in: invalidItems } });
       console.log(`🗑️ Removed ${invalidItems.length} invalid items from cart`);
-      throw new CustomError('Algunos productos en tu carrito ya no están disponibles y han sido eliminados. Por favor revisa tu carrito e intenta nuevamente.', 400);
+      throw new CustomError('Algunos productos en tu carrito ya no existen y han sido eliminados. Por favor revisa tu carrito e intenta nuevamente.', 400);
     }
 
     // Validate stock and calculate totals
