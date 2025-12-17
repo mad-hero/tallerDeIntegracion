@@ -233,6 +233,11 @@ class ApiService {
     return response.data;
   }
 
+  async changePassword(data: { currentPassword: string; newPassword: string }) {
+    const response = await this.api.put('/user/password', data);
+    return response.data;
+  }
+
   async changePassword(currentPassword: string, newPassword: string) {
     const response = await this.api.put('/user/password', { currentPassword, newPassword });
     return response.data;

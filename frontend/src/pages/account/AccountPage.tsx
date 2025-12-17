@@ -11,11 +11,13 @@ export function AccountPage() {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [searchParams] = useSearchParams();
-  const [activeTab, setActiveTab] = useState<"profile" | "orders">(
-    (searchParams.get("tab") as "profile" | "orders") || "profile"
+  const [activeTab, setActiveTab] = useState<"profile" | "orders" | "password">(
+    (searchParams.get("tab") as "profile" | "orders" | "password") || "profile"
   );
   const [orders, setOrders] = useState<any[]>([]);
   const [loadingOrders, setLoadingOrders] = useState(false);
+  const [passwordMessage, setPasswordMessage] = useState<string | null>(null);
+  const [changingPassword, setChangingPassword] = useState(false);
 
   const {
     register,
@@ -29,6 +31,20 @@ export function AccountPage() {
       rut: "",
       phone: "",
       email: "",
+    },
+  });
+
+  const {
+    register: registerPassword,
+    handleSubmit: handleSubmitPassword,
+    formState: { errors: passwordErrors },
+    reset: resetPassword,
+    watch,
+  } = useForm({
+    defaultValues: {
+      currentPassword: "",
+      newPassword: "",
+      confirmPassword: "",
     },
   });
 
@@ -100,6 +116,23 @@ export function AccountPage() {
     }
   };
 
+  const onPasswordSubmit = async (data: any) => {
+    try {
+      setChangingPassword(true);
+      setPasswordMessage(null);
+      await api.changePassword({
+        currentPassword: data.currentPassword,
+        newPassword: data.newPassword,
+      });
+      setPasswordMessage("Contraseña actualizada exitosamente");
+      resetPassword();
+    } catch (error: any) {
+      setPasswordMessage(error.response?.data?.error || "Error al cambiar contraseña");
+    } finally {
+      setChangingPassword(false);
+    }
+  };
+
   if (!isAuthenticated) {
     return (
       <section className="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8 animate-fade-in">
@@ -135,7 +168,7 @@ export function AccountPage() {
 
       {/* Tabs */}
       <div className="mb-8 rounded-2xl bg-white shadow-lg p-2">
-        <nav className="flex gap-2 max-w-2xl mx-auto">
+        <nav className="flex gap-2 max-w-3xl mx-auto">
           <button
             onClick={() => setActiveTab("profile")}
             className={`flex-1 rounded-xl px-6 py-4 text-sm font-bold transition-all duration-300 ${
@@ -155,6 +188,16 @@ export function AccountPage() {
             }`}
           >
             📦 Pedidos
+          </button>
+          <button
+            onClick={() => setActiveTab("password")}
+            className={`flex-1 rounded-xl px-6 py-4 text-sm font-bold transition-all duration-300 ${
+              activeTab === "password"
+                ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg scale-105"
+                : "text-neutral-600 hover:bg-purple-50 hover:text-purple-900"
+            }`}
+          >
+            🔒 Contraseña
           </button>
         </nav>
       </div>
@@ -365,6 +408,123 @@ export function AccountPage() {
               ))}
             </div>
           )}
+        </div>
+      )}
+
+      {/* Password Tab */}
+      {activeTab === "password" && (
+        <div className="card-premium rounded-3xl border-2 border-transparent bg-white p-8 shadow-2xl animate-scale-in"
+          style={{
+            background: `linear-gradient(white, white) padding-box, linear-gradient(135deg, #f093fb, #f5576c) border-box`
+          }}
+        >
+          <h2 className="mb-8 text-2xl font-black text-gradient flex items-center gap-3">
+            <span className="text-3xl">🔒</span>
+            Cambiar Contraseña
+          </h2>
+          
+          {passwordMessage && (
+            <div
+              className={`mb-6 rounded-2xl p-5 shadow-lg animate-scale-in border-2 border-white/20 ${
+                passwordMessage.includes("exitosamente")
+                  ? "bg-gradient-to-r from-green-500 to-emerald-500 text-white"
+                  : "bg-gradient-to-r from-red-500 to-pink-500 text-white"
+              }`}
+            >
+              <p className="font-bold">{passwordMessage.includes("exitosamente") ? "✅" : "❌"} {passwordMessage}</p>
+            </div>
+          )}
+
+          <form onSubmit={handleSubmitPassword(onPasswordSubmit)} className="space-y-6 max-w-xl">
+            <div>
+              <label className="block text-sm font-medium text-neutral-700 mb-2">
+                Contraseña Actual *
+              </label>
+              <input
+                type="password"
+                {...registerPassword("currentPassword", { 
+                  required: "Contraseña actual es requerida" 
+                })}
+                className="w-full rounded-xl border-2 border-neutral-300 px-4 py-3 transition-all focus:border-purple-500 focus:ring-2 focus:ring-purple-200 focus:outline-none"
+                placeholder="Ingresa tu contraseña actual"
+              />
+              {passwordErrors.currentPassword && (
+                <p className="mt-2 text-sm text-red-600 font-semibold">
+                  ⚠️ {passwordErrors.currentPassword.message}
+                </p>
+              )}
+            </div>
+
+            <div className="border-t-2 border-purple-200 pt-6">
+              <div>
+                <label className="block text-sm font-medium text-neutral-700 mb-2">
+                  Nueva Contraseña *
+                </label>
+                <input
+                  type="password"
+                  {...registerPassword("newPassword", { 
+                    required: "Nueva contraseña es requerida",
+                    minLength: {
+                      value: 8,
+                      message: "La contraseña debe tener al menos 8 caracteres"
+                    },
+                    pattern: {
+                      value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+                      message: "Debe contener mayúsculas, minúsculas y números"
+                    }
+                  })}
+                  className="w-full rounded-xl border-2 border-neutral-300 px-4 py-3 transition-all focus:border-purple-500 focus:ring-2 focus:ring-purple-200 focus:outline-none"
+                  placeholder="Ingresa tu nueva contraseña"
+                />
+                {passwordErrors.newPassword && (
+                  <p className="mt-2 text-sm text-red-600 font-semibold">
+                    ⚠️ {passwordErrors.newPassword.message}
+                  </p>
+                )}
+                <p className="mt-2 text-xs text-neutral-500">
+                  ℹ️ Mínimo 8 caracteres, debe incluir mayúsculas, minúsculas y números
+                </p>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-neutral-700 mb-2">
+                Confirmar Nueva Contraseña *
+              </label>
+              <input
+                type="password"
+                {...registerPassword("confirmPassword", { 
+                  required: "Confirma tu nueva contraseña",
+                  validate: (value) => 
+                    value === watch("newPassword") || "Las contraseñas no coinciden"
+                })}
+                className="w-full rounded-xl border-2 border-neutral-300 px-4 py-3 transition-all focus:border-purple-500 focus:ring-2 focus:ring-purple-200 focus:outline-none"
+                placeholder="Confirma tu nueva contraseña"
+              />
+              {passwordErrors.confirmPassword && (
+                <p className="mt-2 text-sm text-red-600 font-semibold">
+                  ⚠️ {passwordErrors.confirmPassword.message}
+                </p>
+              )}
+            </div>
+
+            <div className="flex justify-end pt-4">
+              <button
+                type="submit"
+                disabled={changingPassword}
+                className="btn-premium rounded-2xl bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 px-8 py-4 text-base font-bold text-white shadow-xl hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:scale-105"
+              >
+                {changingPassword ? (
+                  <span className="flex items-center gap-2">
+                    <span className="inline-block h-5 w-5 animate-spin rounded-full border-3 border-white border-r-transparent"></span>
+                    Cambiando...
+                  </span>
+                ) : (
+                  "🔒 Cambiar Contraseña"
+                )}
+              </button>
+            </div>
+          </form>
         </div>
       )}
     </section>
