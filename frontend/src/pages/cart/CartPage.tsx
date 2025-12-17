@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
+import { useAuth } from "../../context/AuthContext";
 import { getImageUrl } from "../../utils/imageUrl";
 import { formatCLP } from "../../utils/currency";
 import { api } from "../../services/api";
@@ -8,6 +9,7 @@ import { api } from "../../services/api";
 export function CartPage() {
   const navigate = useNavigate();
   const { cart, loading, updateCartItem, removeFromCart } = useCart();
+  const { user } = useAuth();
   const [updating, setUpdating] = useState<string | null>(null);
   const [showQuoteModal, setShowQuoteModal] = useState(false);
   const [quoteForm, setQuoteForm] = useState({
@@ -17,6 +19,18 @@ export function CartPage() {
     message: "",
   });
   const [submittingQuote, setSubmittingQuote] = useState(false);
+
+  // Autocomplete quote form with user data when modal opens
+  useEffect(() => {
+    if (showQuoteModal && user) {
+      setQuoteForm({
+        name: `${user.firstName} ${user.lastName}`,
+        email: user.email,
+        phone: user.phone || "",
+        message: "",
+      });
+    }
+  }, [showQuoteModal, user]);
 
   const handleQuantityChange = async (itemId: string, newQuantity: number) => {
     if (newQuantity < 1) {
@@ -262,6 +276,18 @@ export function CartPage() {
               Envíanos tus datos y te contactaremos con una cotización personalizada
               en menos de 24 horas.
             </p>
+
+            {user && (
+              <div className="mb-4 rounded-lg bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-blue-200 p-3">
+                <p className="text-sm font-semibold text-blue-900 flex items-center gap-2">
+                  <span>✓</span>
+                  Tus datos han sido autocompletados
+                </p>
+                <p className="text-xs text-blue-700 mt-1">
+                  Puedes editarlos si lo deseas antes de enviar
+                </p>
+              </div>
+            )}
 
             <form onSubmit={handleRequestQuote} className="space-y-4">
               <div>

@@ -835,6 +835,122 @@ export async function sendContactFormConfirmation(data: {
 }
 
 /**
+ * Send order status update email to customer
+ */
+export async function sendOrderStatusUpdate(
+  customerName: string,
+  customerEmail: string,
+  orderNumber: string,
+  newStatus: string,
+  trackingNumber?: string
+): Promise<void> {
+  if (!resend && !transporter) {
+    console.log('Email service not configured. Order status update not sent.');
+    return;
+  }
+
+  const statusInfo: { [key: string]: { label: string; icon: string; color: string; message: string } } = {
+    pending: {
+      label: 'Pendiente',
+      icon: '⏳',
+      color: '#ffc107',
+      message: 'Tu pedido ha sido recibido y está pendiente de procesamiento. Te notificaremos cuando comience a procesarse.',
+    },
+    processing: {
+      label: 'En Proceso',
+      icon: '⚙️',
+      color: '#007bff',
+      message: 'Tu pedido está siendo preparado. Nuestro equipo está empacando tus productos con cuidado.',
+    },
+    shipped: {
+      label: 'Enviado',
+      icon: '🚚',
+      color: '#17a2b8',
+      message: '¡Tu pedido está en camino! El envío ha sido despachado y pronto llegará a tu dirección.',
+    },
+    delivered: {
+      label: 'Entregado',
+      icon: '✅',
+      color: '#28a745',
+      message: '¡Tu pedido ha sido entregado! Esperamos que disfrutes tus productos. Gracias por tu compra.',
+    },
+    cancelled: {
+      label: 'Cancelado',
+      icon: '❌',
+      color: '#dc3545',
+      message: 'Tu pedido ha sido cancelado. Si tienes alguna pregunta, no dudes en contactarnos.',
+    },
+  };
+
+  const status = statusInfo[newStatus] || statusInfo.pending;
+
+  const html = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background-color: ${status.color}; color: white; padding: 20px; text-align: center; border-radius: 5px 5px 0 0; }
+        .content { background-color: #f9f9f9; padding: 20px; }
+        .status-box { background-color: white; padding: 20px; margin: 20px 0; text-align: center; border-radius: 5px; border: 2px solid ${status.color}; }
+        .tracking-box { background-color: #fff3cd; padding: 15px; margin: 20px 0; border-radius: 5px; text-align: center; }
+        .button { display: inline-block; padding: 12px 24px; background-color: ${status.color}; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+        .footer { margin-top: 30px; font-size: 12px; color: #666; text-align: center; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header">
+          <h1>${status.icon} Actualización de Pedido</h1>
+        </div>
+        <div class="content">
+          <p>Hola <strong>${customerName}</strong>,</p>
+          <p>Tu pedido <strong>#${orderNumber}</strong> ha sido actualizado.</p>
+          
+          <div class="status-box">
+            <p style="margin: 0; color: #666; font-size: 14px;">Nuevo Estado</p>
+            <h2 style="margin: 10px 0; color: ${status.color};">${status.icon} ${status.label}</h2>
+            <p style="margin: 10px 0; color: #666;">${status.message}</p>
+          </div>
+          
+          ${trackingNumber ? `
+          <div class="tracking-box">
+            <p><strong>📦 Número de Seguimiento:</strong></p>
+            <p style="font-size: 18px; font-weight: bold; color: #333; margin: 10px 0;">${trackingNumber}</p>
+            <p style="font-size: 12px; color: #666;">Puedes usar este número para rastrear tu envío con la empresa de transporte.</p>
+          </div>
+          ` : ''}
+          
+          <p style="text-align: center;">
+            <a href="${frontendURL}/cuenta?tab=orders" class="button">Ver Mi Pedido</a>
+          </p>
+          
+          <p>Si tienes alguna pregunta sobre tu pedido, no dudes en contactarnos:</p>
+          <ul>
+            <li>📧 Email: <a href="mailto:jspdetailing627@gmail.com">jspdetailing627@gmail.com</a></li>
+            <li>📱 WhatsApp: <a href="https://wa.me/56930828558">+56 9 3082 8558</a></li>
+          </ul>
+        </div>
+        <div class="footer">
+          <p>Gracias por confiar en JSP Detailing</p>
+          <p>© ${new Date().getFullYear()} JSP Detailing. Todos los derechos reservados.</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  try {
+    await sendEmail(customerEmail, `${status.icon} Actualización de Pedido #${orderNumber} - JSP Detailing`, html);
+    console.log(`✅ Order status update sent to ${customerEmail} for order ${orderNumber} (${newStatus})`);
+  } catch (error) {
+    console.error('❌ Error sending order status update:', error);
+  }
+}
+
+/**
  * Test email connection
  */
 export async function testEmailConnection(): Promise<boolean> {

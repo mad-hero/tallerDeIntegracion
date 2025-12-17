@@ -6,7 +6,7 @@ import { CartItem } from '../models/CartItem';
 import { User } from '../models/User';
 import { AuthRequest } from '../types';
 import { CustomError } from '../middleware/errorHandler';
-import { sendOrderConfirmation } from '../services/emailService';
+import { sendOrderConfirmation, sendOrderStatusUpdate } from '../services/emailService';
 
 /**
  * Create a new order from cart
@@ -44,6 +44,15 @@ export async function createOrder(req: AuthRequest, res: Response): Promise<void
     for (const item of cartItems) {
       const product = item.productId as any;
       const variant = item.variantId as any;
+
+      // Validate product exists and is active
+      if (!product) {
+        throw new CustomError('Uno o más productos en el carrito ya no están disponibles. Por favor actualiza tu carrito.', 400);
+      }
+
+      if (product.status !== 'active') {
+        throw new CustomError(`El producto "${product.name}" ya no está disponible`, 400);
+      }
 
       // Check stock
       const availableStock = variant ? variant.stock : product.stock;
@@ -97,11 +106,13 @@ export async function createOrder(req: AuthRequest, res: Response): Promise<void
       const product = item.productId as any;
       const variant = item.variantId as any;
 
-      if (variant) {
+      if (!product) continue; // Skip if product doesn't exist
+
+      if (variant && variant._id) {
         await ProductVariant.findByIdAndUpdate(variant._id, {
           $inc: { stock: -item.quantity }
         });
-      } else {
+      } else if (product._id) {
         await Product.findByIdAndUpdate(product._id, {
           $inc: { stock: -item.quantity }
         });
@@ -353,6 +364,26 @@ export async function updateOrderStatus(req: AuthRequest, res: Response): Promis
             $inc: { stock: item.quantity }
           });
         }
+      }
+    }
+
+    // Send email notification to customer if status changed
+    if (previousStatus !== status && order.userId) {
+      try {
+        const user = await User.findById(order.userId);
+        if (user && user.email) {
+          const customerName = `${user.firstName} ${user.lastName}`;
+          await sendOrderStatusUpdate(
+            customerName,
+            user.email,
+            order.orderNumber,
+            status
+          );
+          console.log(`✅ Status update email sent to ${user.email} for order ${order.orderNumber}`);
+        }
+      } catch (emailError) {
+        // Don't fail the status update if email fails
+        console.error('❌ Failed to send status update email:', emailError);
       }
     }
 
