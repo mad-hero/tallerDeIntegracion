@@ -2,7 +2,7 @@ import axios, { AxiosError } from 'axios';
 import type { AxiosInstance } from 'axios';
 import type { User, Product, Category, Cart, HomeBanner, ContentPage, DashboardStats, PaginatedResponse } from '../types';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL + '/api' || 'http://localhost:5000/api';
 
 class ApiService {
   private api: AxiosInstance;
@@ -24,7 +24,7 @@ class ApiService {
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;
         }
-        
+
         // Add session ID for guest users (cart persistence)
         // Only add if not logged in
         if (!token) {
@@ -34,7 +34,7 @@ class ApiService {
             console.log('🔑 Sending guest session ID:', sessionId);
           }
         }
-        
+
         return config;
       },
       (error) => Promise.reject(error)
@@ -176,16 +176,16 @@ class ApiService {
 
   async addToCart(productId: string, variantId?: string, quantity: number = 1) {
     console.log('🛒 Adding to cart:', { productId, variantId, quantity });
-    
+
     const response = await this.api.post('/cart', { productId, variantId, quantity });
-    
+
     // Store sessionId for guest users
     const isLoggedIn = !!localStorage.getItem('accessToken');
     if (response.data.sessionId && !isLoggedIn) {
       console.log('💾 Storing guest session ID:', response.data.sessionId);
       localStorage.setItem('guestSessionId', response.data.sessionId);
     }
-    
+
     console.log('✅ Item added to cart successfully');
     return response.data;
   }
